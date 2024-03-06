@@ -148,13 +148,15 @@ function Cell<R, SR>({
     >
       
     
-      <div style={{
+      <div className='rdg-cell-container' style={{
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
         display:'flex',
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        width:'100%',
+        height:'100%'
       }}>
 
       {column.renderCell({
