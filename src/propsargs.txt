@@ -1,0 +1,1061 @@
+onrowclick {
+    "id": "df4edc21-a95f-408d-b9b0-2ec18e801a23",
+    "columns": [
+        {
+            "width": 50,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": false,
+            "resizable": false,
+            "filterable": false,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": false,
+            "editable": false,
+            "type": "checkboxSelection",
+            "align": "center",
+            "filterOperators": [
+                {
+                    "value": "is"
+                }
+            ],
+            "headerAlign": "center",
+            "field": "__check__",
+            "disableColumnMenu": true,
+            "disableReorder": true,
+            "disableExport": true,
+            "cellClassName": "MuiDataGrid-cellCheckbox",
+            "headerClassName": "MuiDataGrid-columnHeaderCheckbox",
+            "headerName": "Checkbox selection",
+            "computedWidth": 50
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": true,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": false,
+            "editable": false,
+            "type": "boolean",
+            "align": "center",
+            "filterOperators": [
+                {
+                    "value": "is"
+                }
+            ],
+            "headerAlign": "center",
+            "field": "isLastStatus",
+            "hasBeenResized": true,
+            "headerName": "Last Status",
+            "flex": 1,
+            "computedWidth": 0
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": true,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "id",
+            "hasBeenResized": true,
+            "headerName": "Item ID",
+            "flex": 1,
+            "computedWidth": 0
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": true,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "asnId",
+            "hasBeenResized": false,
+            "headerName": "ASNID",
+            "computedWidth": 0
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": true,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "serialNo",
+            "hasBeenResized": false,
+            "headerName": "Serial No.",
+            "computedWidth": 0
+        },
+        {
+            "width": 10,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": false,
+            "resizable": true,
+            "filterable": false,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "center",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "splitTab",
+            "hasBeenResized": true,
+            "headerName": "",
+            "headerAlign": "center",
+            "computedWidth": 50
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "poNumber",
+            "hasBeenResized": true,
+            "headerName": "PO & Item ID",
+            "computedWidth": 100
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "number",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "label": "=",
+                    "value": "=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "!=",
+                    "value": "!=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": ">",
+                    "value": ">",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": ">=",
+                    "value": ">=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "<",
+                    "value": "<",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "<=",
+                    "value": "<=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "headerAlign": "left",
+            "field": "supplierPartNum",
+            "hasBeenResized": true,
+            "headerName": "Supplier Part Number",
+            "flex": 1,
+            "computedWidth": 107.33333333333333
+        },
+        {
+            "width": 250,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "materialId",
+            "hasBeenResized": true,
+            "headerName": "Material",
+            "computedWidth": 250
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "center",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "uom",
+            "hasBeenResized": true,
+            "headerName": "UOM",
+            "flex": 1,
+            "headerAlign": "center",
+            "computedWidth": 107.33333333333333
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": false,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": true,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "batch",
+            "hasBeenResized": true,
+            "flex": 1,
+            "headerAlign": "center",
+            "computedWidth": 107.33333333333333
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "right",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "tol",
+            "hasBeenResized": true,
+            "headerName": "Tolerance Limit",
+            "flex": 1,
+            "headerAlign": "right",
+            "computedWidth": 107.33333333333333
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": false,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "number",
+            "align": "right",
+            "filterOperators": [
+                {
+                    "label": "=",
+                    "value": "=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "!=",
+                    "value": "!=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": ">",
+                    "value": ">",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": ">=",
+                    "value": ">=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "<",
+                    "value": "<",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "<=",
+                    "value": "<=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "headerAlign": "right",
+            "field": "confirmedQuantity",
+            "hasBeenResized": true,
+            "flex": 1,
+            "computedWidth": 107.33333333333333
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": true,
+            "type": "number",
+            "align": "right",
+            "filterOperators": [
+                {
+                    "label": "=",
+                    "value": "=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "!=",
+                    "value": "!=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": ">",
+                    "value": ">",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": ">=",
+                    "value": ">=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "<",
+                    "value": "<",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "label": "<=",
+                    "value": "<=",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf",
+                    "InputComponentProps": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "headerAlign": "right",
+            "field": "shipmentQuantity",
+            "hasBeenResized": true,
+            "flex": 1,
+            "computedWidth": 107.33333333333333
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": true,
+            "hideable": true,
+            "sortable": false,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "center",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "expectedDeliveryDate",
+            "hasBeenResized": true,
+            "headerName": "Expected Completion Date",
+            "flex": 1,
+            "headerAlign": "center",
+            "computedWidth": 0
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": true,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "dprStatus",
+            "hasBeenResized": true,
+            "headerName": "DPR Status",
+            "flex": 1,
+            "computedWidth": 0
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "manufacturingDate",
+            "hasBeenResized": true,
+            "flex": 1.5,
+            "computedWidth": 161
+        },
+        {
+            "width": 100,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": false,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "expiryDate",
+            "hasBeenResized": true,
+            "flex": 1.5,
+            "computedWidth": 161
+        },
+        {
+            "width": 50,
+            "minWidth": 50,
+            "maxWidth": null,
+            "hide": true,
+            "hideable": true,
+            "sortable": true,
+            "resizable": true,
+            "filterable": true,
+            "groupable": true,
+            "pinnable": true,
+            "aggregable": true,
+            "editable": false,
+            "type": "string",
+            "align": "left",
+            "filterOperators": [
+                {
+                    "value": "contains"
+                },
+                {
+                    "value": "equals"
+                },
+                {
+                    "value": "startsWith"
+                },
+                {
+                    "value": "endsWith"
+                },
+                {
+                    "value": "isEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isNotEmpty",
+                    "requiresFilterValue": false
+                },
+                {
+                    "value": "isAnyOf"
+                }
+            ],
+            "field": "action",
+            "hasBeenResized": true,
+            "headerName": "Action",
+            "computedWidth": 0
+        }
+    ],
+    "row": {
+        "id": 1,
+        "uId": "df4edc21-a95f-408d-b9b0-2ec18e801a23",
+        "serialNo": 1,
+        "asnId": null,
+        "poNumber": "4500029018",
+        "lineItem": "00020",
+        "materialId": "MM-RLF",
+        "batch": null,
+        "uom": "PC",
+        "supplierPartNum": "IB001",
+        "description": "Rulof Mander",
+        "confirmedQuantity": 200,
+        "shipmentQuantity": 200,
+        "expectedDeliveryDate": "2024-03-04T06:17:04.518Z",
+        "dprStatus": "NA",
+        "taxPercentage": 0,
+        "netPrice": 2000,
+        "manufacturingDate": null,
+        "expiryDate": null,
+        "isLastStatus": false,
+        "consumptionObj": null,
+        "overTol": "0.0",
+        "underTol": "0.0"
+    }
+}
+
+oncelleditcommit {
+    "id": "3fa9cb70-62aa-47e4-8275-767227b3d4e7",
+    "field": "batch",
+    "value": "dasdsd"
+}
+
+oncellclick {
+    "id": "3fa9cb70-62aa-47e4-8275-767227b3d4e7",
+    "field": "materialId",
+    "row": {
+        "id": 0,
+        "uId": "3fa9cb70-62aa-47e4-8275-767227b3d4e7",
+        "serialNo": 0,
+        "asnId": null,
+        "poNumber": "4500029018",
+        "lineItem": "00010",
+        "materialId": "MILK",
+        "batch": "dasdsd",
+        "uom": "L",
+        "supplierPartNum": "IB001",
+        "description": "Badam Milk",
+        "confirmedQuantity": 100,
+        "shipmentQuantity": 1,
+        "expectedDeliveryDate": "2024-03-04T06:17:04.518Z",
+        "dprStatus": "NA",
+        "taxPercentage": 0,
+        "netPrice": null,
+        "manufacturingDate": null,
+        "expiryDate": null,
+        "isLastStatus": false,
+        "consumptionObj": null,
+        "overTol": "0.0",
+        "underTol": "0.0"
+    },
+    "rowNode": {
+        "id": "3fa9cb70-62aa-47e4-8275-767227b3d4e7",
+        "depth": 0,
+        "parent": null,
+        "groupingKey": "",
+        "groupingField": null
+    },
+    "colDef": {
+        "width": 250,
+        "minWidth": 50,
+        "maxWidth": null,
+        "hide": false,
+        "hideable": true,
+        "sortable": true,
+        "resizable": true,
+        "filterable": true,
+        "groupable": true,
+        "pinnable": true,
+        "aggregable": true,
+        "editable": false,
+        "type": "string",
+        "align": "left",
+        "filterOperators": [
+            {
+                "value": "contains"
+            },
+            {
+                "value": "equals"
+            },
+            {
+                "value": "startsWith"
+            },
+            {
+                "value": "endsWith"
+            },
+            {
+                "value": "isEmpty",
+                "requiresFilterValue": false
+            },
+            {
+                "value": "isNotEmpty",
+                "requiresFilterValue": false
+            },
+            {
+                "value": "isAnyOf"
+            }
+        ],
+        "field": "materialId",
+        "hasBeenResized": true,
+        "headerName": "Material",
+        "computedWidth": 250
+    },
+    "cellMode": "view",
+    "hasFocus": false,
+    "tabIndex": -1,
+    "value": "MILK",
+    "formattedValue": "MILK",
+    "isEditable": false
+}
+
+
