@@ -71,10 +71,12 @@ export function renderCheckbox({ onChange, ...props }: RenderCheckboxProps) {
         [checkboxLabelDisabledClassname]: props.disabled
       })}
     >
+      
       <input
         type="checkbox"
         style={{
-          color:'red'
+          backgroundColor:'red',
+          display:'none'
         }}
         {...props}
         className={checkboxInputClassname}

@@ -202,6 +202,7 @@ export default function AllFeatures({ direction }: Props) {
       navigator.clipboard.writeText(sourceRow[sourceColumnKey as keyof Row]);
     }
   }
+  console.log(selectedRows)
 
   return (
     <DataGrid
@@ -214,6 +215,7 @@ export default function AllFeatures({ direction }: Props) {
       onPaste={handlePaste}
       rowHeight={30}
       selectedRows={selectedRows}
+      
       onSelectedRowsChange={setSelectedRows}
       className="fill-grid"
       rowClass={(row, index) =>

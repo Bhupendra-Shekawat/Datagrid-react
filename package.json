@@ -1,6 +1,6 @@
 {
   "name": "@cworks/react-datagrid",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "license": "MIT",
   "description": "Feature-rich and customizable data grid React component",
   "keywords": [

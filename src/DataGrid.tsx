@@ -515,7 +515,7 @@ function DataGrid<R, SR, K extends Key>(
     if (args.type === 'HEADER') {
       const newSelectedRows = new Set(selectedRows);
       for (const row of rows) {
-        const rowKey = rowKeyGetter(row);
+        const rowKey = rowKeyGetter(row)?? (row as any)[getRowId];
         if (args.checked) {
           newSelectedRows.add(rowKey);
         } else {

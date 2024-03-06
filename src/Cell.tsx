@@ -152,9 +152,7 @@ function Cell<R, SR>({
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center',
+        padding:'.5rem',
         width:'100%',
         height:'100%'
       }}>
