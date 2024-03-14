@@ -43,6 +43,7 @@ import type {
   EditCellCommitArgs,
   FillEvent,
   Maybe,
+  OnHeaderAction,
   PasteEvent,
   Position,
   Renderers,
@@ -124,6 +125,10 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
   /** The getter should return a unique key for each row */
   rowKeyGetter?: Maybe<(row: R) => K>;
   onRowsChange?: Maybe<(rows: R[], data: RowsChangeData<R, SR>) => void>;
+
+  //** function should handle header related actions */
+
+  onHeaderAction?: OnHeaderAction;
 
   /**
    * Dimensions props
@@ -243,6 +248,7 @@ function DataGrid<R, SR, K extends Key>(
     sortColumns,
     onSortColumnsChange,
     defaultColumnOptions,
+    onHeaderAction,
     // Event props
     onCellClick,
     onCellDoubleClick,
@@ -337,7 +343,6 @@ function DataGrid<R, SR, K extends Key>(
     viewportWidth: gridWidth,
     enableVirtualization
   });
-
   const topSummaryRowsCount = topSummaryRows?.length ?? 0;
   const bottomSummaryRowsCount = bottomSummaryRows?.length ?? 0;
   const summaryRowsCount = topSummaryRowsCount + bottomSummaryRowsCount;
@@ -1082,7 +1087,7 @@ function DataGrid<R, SR, K extends Key>(
 
   const isGroupRowFocused =
     selectedPosition.idx === -1 && selectedPosition.rowIdx !== minRowIdx - 1;
-
+console.log(columns)
   return (
     <>
     <div
@@ -1161,9 +1166,11 @@ function DataGrid<R, SR, K extends Key>(
               selectedCellIdx={
                 selectedPosition.rowIdx === mainHeaderRowIdx ? selectedPosition.idx : undefined
               }
+              rawColumns={rawColumns}
               selectCell={selectHeaderCellLatest}
               shouldFocusGrid={!selectedCellIsWithinSelectionBounds}
               direction={direction}
+              onHeaderAction={onHeaderAction}
             />
                  
 

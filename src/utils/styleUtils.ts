@@ -29,8 +29,8 @@ export function getHeaderCellStyle<R, SR>(
       gridRowStart: 1,
       gridRowEnd,
       paddingBlockStart,
-    textAlign: column.headerAlign ?? column.align ?? 'start'
-
+    textAlign: column.headerAlign ?? column.align ?? 'start',
+    
     };
   }
 
@@ -39,7 +39,9 @@ export function getHeaderCellStyle<R, SR>(
     gridRowStart: gridRowEnd - rowSpan,
     gridRowEnd,
     paddingBlockStart,
-    textAlign: column.headerAlign ?? column.align ?? 'start'
+    textAlign: column.headerAlign ?? column.align ?? 'start',
+
+
   };
 }
 
@@ -53,8 +55,8 @@ export function getCellStyle<R, SR>(
     gridColumnEnd: index + colSpan,
     insetInlineStart: column.frozen ? `var(--rdg-frozen-left-${column.idx})` : undefined,
     textAlign: column.align??'start',
-    cursor: column.editable ? 'text':"pointer"
-   
+    cursor: column.editable && column.type !== 'select' ? 'text':"pointer",
+    padding:'.2rem'
 
   };
 }

@@ -99,7 +99,7 @@ export function useViewportColumns<R, SR>({
     lastFrozenColumnIndex,
     colSpanColumns
   ]);
-
+  
   return useMemo((): readonly CalculatedColumn<R, SR>[] => {
     const viewportColumns: CalculatedColumn<R, SR>[] = [];
     for (let colIdx = 0; colIdx <= colOverscanEndIdx; colIdx++) {

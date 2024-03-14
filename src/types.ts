@@ -5,6 +5,8 @@ import type { DataGridProps } from './DataGrid';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export type Maybe<T> = T | undefined | null;
+export type CellEditType = "text"|"number"|"select";
+
 
 export type StateSetter<S> = React.Dispatch<React.SetStateAction<S>>;
 
@@ -12,7 +14,7 @@ export interface Column<TRow, TSummaryRow = unknown> {
   /** The name of the column. By default it will be displayed in the header cell */
   readonly name: string | ReactElement;
   readonly hide?:boolean;
-  /** A unique key to distinguish each column */
+    /** A unique key to distinguish each column */
   readonly key: string;
   /** Column width. If not specified, it will be determined automatically based on grid width and specified widths of other columns */
   readonly width?: Maybe<number | string>;
@@ -21,6 +23,10 @@ export interface Column<TRow, TSummaryRow = unknown> {
 
   /** Minimum column width in px. */
   readonly minWidth?: Maybe<number>;
+  readonly type?: CellEditType;
+  readonly options?: Array<String>;
+
+
   /** Maximum column width in px. */
   readonly maxWidth?: Maybe<number>;
   readonly cellClass?: Maybe<string | ((row: TRow) => Maybe<string>)>;
@@ -40,7 +46,7 @@ export interface Column<TRow, TSummaryRow = unknown> {
   readonly renderEditCell?: Maybe<(props: RenderEditCellProps<TRow, TSummaryRow>) => ReactNode>;
   /** Enables cell editing. If set and no editor property specified, then a textinput will be used as the cell editor */
   readonly editable?: Maybe<boolean | ((row: TRow) => boolean)>;
-  readonly colSpan?: Maybe<(args: ColSpanArgs<TRow, TSummaryRow>) => Maybe<number>>;
+    readonly colSpan?: Maybe<(args: ColSpanArgs<TRow, TSummaryRow>) => Maybe<number>>;
   /** Determines whether column is frozen or not */
   readonly frozen?: Maybe<boolean>;
   /** Enable resizing of a column */
@@ -63,6 +69,7 @@ export interface Column<TRow, TSummaryRow = unknown> {
     readonly commitOnOutsideClick?: Maybe<boolean>;
   }>;
 }
+export type OnHeaderAction = Maybe<((colIndex:string|number,actionRef: string)=>void)>
 
 export interface CalculatedColumn<TRow, TSummaryRow = unknown> extends Column<TRow, TSummaryRow> {
   readonly parent: CalculatedColumnParent<TRow, TSummaryRow> | undefined;
@@ -74,8 +81,11 @@ export interface CalculatedColumn<TRow, TSummaryRow = unknown> extends Column<TR
   readonly resizable: boolean;
   readonly sortable: boolean;
   readonly draggable: boolean;
-  readonly frozen: boolean;
-  readonly align:  Maybe<"start"| "center" | "end">;
+   frozen: boolean; 
+  readonly type?: CellEditType;
+  readonly options?: Array<String>;
+
+    readonly align:  Maybe<"start"| "center" | "end">;
   readonly headerAlign:  Maybe<"start"| "center" | "end">;
   readonly renderCell: (props: RenderCellProps<TRow, TSummaryRow>) => ReactNode;
 }
@@ -138,7 +148,7 @@ export interface RenderGroupCellProps<TRow, TSummaryRow = unknown> {
 export interface RenderEditCellProps<TRow, TSummaryRow = unknown> {
   column: CalculatedColumn<TRow, TSummaryRow>;
   row: TRow;
-  onRowChange: (row: TRow, commitChanges?: boolean) => void;
+    onRowChange: (row: TRow, commitChanges?: boolean) => void;
   onClose: (commitChanges?: boolean, shouldFocusCell?: boolean) => void;
 }
 

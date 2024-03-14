@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import clsx from 'clsx';
 
 import { getColSpan } from './utils';
-import type { CalculatedColumn, Direction, Position } from './types';
+import type { CalculatedColumn, ColumnOrColumnGroup, Direction, Maybe, OnHeaderAction, Position } from './types';
 import type { DataGridProps } from './DataGrid';
 import HeaderCell from './HeaderCell';
 import { cell, cellFrozen } from './style/cell';
@@ -23,6 +23,8 @@ export interface HeaderRowProps<R, SR, K extends React.Key> extends SharedDataGr
   selectedCellIdx: number | undefined;
   shouldFocusGrid: boolean;
   direction: Direction;
+  rawColumns: readonly ColumnOrColumnGroup<R, SR>[];
+  onHeaderAction:OnHeaderAction
 }
 
 const headerRow = css`
@@ -57,7 +59,9 @@ function HeaderRow<R, SR, K extends React.Key>({
   selectedCellIdx,
   selectCell,
   shouldFocusGrid,
-  direction
+  direction,
+  rawColumns,
+  onHeaderAction
 }: HeaderRowProps<R, SR, K>) {
   const dragDropKey = useId();
 
@@ -84,6 +88,8 @@ function HeaderRow<R, SR, K extends React.Key>({
         shouldFocusGrid={shouldFocusGrid && index === 0}
         direction={direction}
         dragDropKey={dragDropKey}
+        rawColumns={rawColumns}
+        onHeaderAction={onHeaderAction}
       />
     );
   }

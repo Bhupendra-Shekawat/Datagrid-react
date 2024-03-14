@@ -44,19 +44,68 @@ export default function textEditor<TRow, TSummaryRow>({
   onRowChange,
   onClose
 }: RenderEditCellProps<TRow, TSummaryRow>) {
-  return (
-    <input
-      className={textEditorClassname}
-      style={{
-        border:"2px solid black",
-        padding:'0 .5rem',
-        backgroundColor:'hsl(207deg 27.27% 79.63%)'
-      }}
-      ref={autoFocusAndSelect}
-      value={row[column.key as keyof TRow] as unknown as string}
-      onChange={(event) => onRowChange({ ...row, [column.key]: event.target.value })}
-      onBlur={() => onClose(true, false)}
     
-    />
-  );
+  if(column.editable  && !column.renderCell){
+    switch(column.type){
+      case 'select':
+        return (
+           
+            <select
+              className={textEditorClassname}
+              value={row[column.key as keyof TRow] as unknown as string}
+              onChange={(event) => onRowChange({ ...row, [column.key]: event.target.value },true)}
+              autoFocus
+
+            >
+              <option  value={""}>
+                  {`Select ${column.name}`}
+                </option>
+              {column.options?.map((title) => (
+                <option key={(title as string)} value={(title as string)}>
+                  {title}
+                </option>
+              ))}
+            </select>
+          
+        
+        );
+
+      default:
+        return (
+          <input
+            className={textEditorClassname}
+            style={{
+              border:"2px solid grey",
+              padding:'.5rem',
+              backgroundColor:'hsl(207deg 27.27% 79.63%)',
+              borderRadius:'4px'
+            }}
+            ref={autoFocusAndSelect}
+            value={row[column.key as keyof TRow] as unknown as string}
+            onChange={(event) => onRowChange({ ...row, [column.key]: event.target.value })}
+            onBlur={() => onClose(true, false)}
+            type={column.type}
+          />
+        );
+    }
+
+  }else{
+    return (
+      <input
+        className={textEditorClassname}
+        style={{
+          border:"2px solid grey",
+          padding:'.5rem',
+          backgroundColor:'hsl(207deg 27.27% 79.63%)',
+          borderRadius:'4px'
+        }}
+        ref={autoFocusAndSelect}
+        value={row[column.key as keyof TRow] as unknown as string}
+        onChange={(event) => onRowChange({ ...row, [column.key]: event.target.value })}
+        onBlur={() => onClose(true, false)}
+        type={column.type}
+      />
+    );
+  }
+ 
 }

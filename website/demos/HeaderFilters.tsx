@@ -132,6 +132,8 @@ export default function HeaderFilters({ direction }: Props) {
         key: 'priority',
         name: 'Priority',
         headerCellClass: filterColumnClassName,
+        
+        align:'center',
         renderHeaderCell: (p) => (
           <FilterRenderer<Row> {...p}>
             {({ filters, ...rest }) => (

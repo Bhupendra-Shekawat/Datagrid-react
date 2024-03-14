@@ -69,6 +69,8 @@ function Cell<R, SR>({
   }
 
   function handleContextMenu(event: React.MouseEvent<HTMLDivElement>) {
+    
+    
     if (onContextMenu) {
       const cellEvent = createCellEvent(event);
       onContextMenu({ row, column, selectCell: selectCellWrapper }, cellEvent);
@@ -78,6 +80,7 @@ function Cell<R, SR>({
   }
 
   function handleDoubleClick(event: React.MouseEvent<HTMLDivElement>) {
+
     if (onDoubleClick) {
       const cellEvent = createCellEvent(event);
       onDoubleClick({ row, column, selectCell: selectCellWrapper }, cellEvent);
@@ -91,9 +94,9 @@ function Cell<R, SR>({
   }
   function handleMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
     const element = event.currentTarget;
-    const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
+      const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
     const textElementWidth = parseInt(getComputedStyle(element.children[0]).width.replace('px', ''), 10) || containerWidth;
-    console.log(containerWidth,textElementWidth)
+
     if (textElementWidth > containerWidth) {
       // Store original styles
       const originalStyles = {
@@ -146,18 +149,24 @@ function Cell<R, SR>({
 
       {...props}
     >
-      
-    
+
+
       <div className='rdg-cell-container' style={{
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-        padding:'.5rem',
-        width:'100%',
-        height:'100%'
+        padding:' 0 .5rem',
+        width:'inherit',
+        height:'100%',
+        display:'flex',
+        justifyContent: column.align ?? "start",
+        alignItems:'center',
+        border: column.editable ? 'solid 1.5px grey':"",
+        borderRadius: column.editable ? '4px':""
+      
       }}>
 
-      {column.renderCell({
+{column.renderCell({
         column,
         row,
         rowIdx,
@@ -165,10 +174,10 @@ function Cell<R, SR>({
         tabIndex: childTabIndex,
         onRowChange: handleRowChange
       })}
-   
    </div>
+</div>
 
-    </div>
+
   );
 }
 

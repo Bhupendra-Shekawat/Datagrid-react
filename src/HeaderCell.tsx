@@ -10,7 +10,7 @@ import {
   getHeaderCellStyle,
   stopPropagation
 } from './utils';
-import type { CalculatedColumn, SortColumn } from './types';
+import type { CalculatedColumn, ColumnOrColumnGroup, Maybe, OnHeaderAction, SortColumn } from './types';
 import type { HeaderRowProps } from './HeaderRow';
 import defaultRenderHeaderCell from './renderHeaderCell';
 
@@ -70,6 +70,8 @@ export interface HeaderCellProps<R, SR> extends SharedHeaderRowProps<R, SR> {
   rowIdx: number;
   isCellSelected: boolean;
   dragDropKey: string;
+  rawColumns: readonly ColumnOrColumnGroup<R, SR>[];
+  onHeaderAction: OnHeaderAction
 }
 
 export default function HeaderCell<R, SR>({
@@ -84,7 +86,9 @@ export default function HeaderCell<R, SR>({
   selectCell,
   shouldFocusGrid,
   direction,
-  dragDropKey
+  dragDropKey,
+  rawColumns,
+  onHeaderAction
 }: HeaderCellProps<R, SR>) {
   const [isDragging, setIsDragging] = useState(false);
   const [isOver, setIsOver] = useState(false);
@@ -186,10 +190,14 @@ export default function HeaderCell<R, SR>({
     }
   }
   function handleRightClick(event: React.MouseEvent<HTMLSpanElement>) {
-    console.log(event)
+    
+    
     event.preventDefault()
+    if(onHeaderAction){
+      onHeaderAction( column.idx,'FROZEN')
+    }
     selectCell({ idx: column.idx, rowIdx });
-  
+    
     
 
   }
@@ -290,6 +298,23 @@ export default function HeaderCell<R, SR>({
     
       {...draggableProps}
     >
+      
+      <div className='rdg-cell-container' style={{
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        padding:' 0 .5rem',
+        width:'inherit',
+        height:'100%',
+        display:'flex',
+        alignItems : column.headerAlign?? column.align ??"",
+        justifyContent:'center',
+        flexDirection:'column'
+      
+      }}>
+      
+
+
       {renderHeaderCell({
         column,
         sortDirection,
@@ -305,6 +330,8 @@ export default function HeaderCell<R, SR>({
           onPointerDown={onPointerDown}
         />
       )}
+      </div>
+
     </div>
   );
 }

@@ -74,7 +74,7 @@ interface Row {
 function getColumns(
   countries: readonly string[],
   direction: Direction
-): readonly Column<Row, SummaryRow>[] {
+):  Column<Row, SummaryRow>[] {
   return [
     SelectColumn,
     {
@@ -90,6 +90,7 @@ function getColumns(
       key: 'title',
       name: 'Task',
       frozen: true,
+      editable:true,
       renderEditCell: textEditor,
       renderSummaryCell({ row }) {
         return `${row.totalCount} records`;

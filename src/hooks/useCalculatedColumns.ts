@@ -44,6 +44,7 @@ export function useCalculatedColumns<R, SR>({
   scrollLeft,
   enableVirtualization
 }: CalculatedColumnsArgs<R, SR>) {
+
   const defaultWidth = defaultColumnOptions?.width ?? DEFAULT_COLUMN_WIDTH;
   const defaultMinWidth = defaultColumnOptions?.minWidth ?? DEFAULT_COLUMN_MIN_WIDTH;
   const defaultMaxWidth = defaultColumnOptions?.maxWidth ?? undefined;
@@ -51,8 +52,8 @@ export function useCalculatedColumns<R, SR>({
   const defaultSortable = defaultColumnOptions?.sortable ?? false;
   const defaultResizable = defaultColumnOptions?.resizable ?? false;
   const defaultDraggable = defaultColumnOptions?.draggable ?? false;
-  const defaultHeaderAlign = 'start';
-  const defaultAlign = 'start';
+  const defaultHeaderAlign = null;
+  const defaultAlign = null;
 
 
 
@@ -141,7 +142,7 @@ export function useCalculatedColumns<R, SR>({
     const colSpanColumns: CalculatedColumn<R, SR>[] = [];
     columns.forEach((column, idx) => {
       column.idx = idx;
-      updateColumnParent(column, idx, 0);
+            updateColumnParent(column, idx, 0);
 
       if (column.colSpan != null) {
         colSpanColumns.push(column);
@@ -259,6 +260,9 @@ export function useCalculatedColumns<R, SR>({
     viewportWidth,
     enableVirtualization
   ]);
+  console.log(rawColumns,'rawColumns')
+  console.log(columns,'columns1')
+
 
   return {
     columns,

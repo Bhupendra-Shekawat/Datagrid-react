@@ -68,7 +68,7 @@ const columns: readonly Column<Row>[] = [
     width: 200,
     resizable: true,
     renderEditCell: renderDropdown,
-    renderHeaderCell: ()=> <p>Title</p>
+  renderHeaderCell: ()=> <p>Title</p>
   },
   {
     key: 'firstName',
@@ -76,6 +76,11 @@ const columns: readonly Column<Row>[] = [
     width: 200,
     resizable: true,
     frozen: true,
+    editable:true,
+    type:'select',
+    headerAlign:'end',
+    align:'end',
+    options:['abc','bcd'],
     renderEditCell: textEditor
   },
   {
@@ -203,6 +208,12 @@ export default function AllFeatures({ direction }: Props) {
     }
   }
   console.log(selectedRows)
+  function onHeaderAction (colIndex:string|number,actionRef:string|number){
+    
+    // columns[6].frozen = true
+    // columns = [...columns]
+    // console.log(columns)
+  }
 
   return (
     <DataGrid
@@ -215,7 +226,7 @@ export default function AllFeatures({ direction }: Props) {
       onPaste={handlePaste}
       rowHeight={30}
       selectedRows={selectedRows}
-      
+      onHeaderAction={onHeaderAction}
       onSelectedRowsChange={setSelectedRows}
       className="fill-grid"
       rowClass={(row, index) =>
