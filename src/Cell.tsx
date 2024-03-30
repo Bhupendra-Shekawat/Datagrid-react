@@ -2,7 +2,13 @@ import { memo } from 'react';
 import { css } from '@linaria/core';
 
 import { useRovingTabIndex } from './hooks';
-import { createCellEvent, getCellClassname, getCellStyle, isCellEditableUtil } from './utils';
+import {
+  createCellEvent,
+  getCellClassname,
+  getCellStyle,
+  getEditCellStyle,
+  isCellEditableUtil
+} from './utils';
 import type { CellRendererProps } from './types';
 
 const cellCopied = css`
@@ -15,9 +21,9 @@ const cellCopiedClassname = `rdg-cell-copied ${cellCopied}`;
 
 const cellDraggedOver = css`
   @layer rdg.Cell {
-         background-color: #ccccff;
+    background-color: #ccccff;
 
-                            &.${cellCopied} {
+    &.${cellCopied} {
       background-color: #9999ff;
     }
   }
@@ -38,10 +44,10 @@ function Cell<R, SR>({
   onContextMenu,
   onRowChange,
   selectCell,
+  isRowSelectable,
   ...props
 }: CellRendererProps<R, SR>) {
   const { tabIndex, childTabIndex, onFocus } = useRovingTabIndex(isCellSelected);
-
   const { cellClass } = column;
   const className = getCellClassname(
     column,
@@ -59,8 +65,6 @@ function Cell<R, SR>({
 
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
     if (onClick) {
-     
-
       const cellEvent = createCellEvent(event);
       onClick({ row, column, selectCell: selectCellWrapper }, cellEvent);
       if (cellEvent.isGridDefaultPrevented()) return;
@@ -69,8 +73,6 @@ function Cell<R, SR>({
   }
 
   function handleContextMenu(event: React.MouseEvent<HTMLDivElement>) {
-    
-    
     if (onContextMenu) {
       const cellEvent = createCellEvent(event);
       onContextMenu({ row, column, selectCell: selectCellWrapper }, cellEvent);
@@ -80,7 +82,6 @@ function Cell<R, SR>({
   }
 
   function handleDoubleClick(event: React.MouseEvent<HTMLDivElement>) {
-
     if (onDoubleClick) {
       const cellEvent = createCellEvent(event);
       onDoubleClick({ row, column, selectCell: selectCellWrapper }, cellEvent);
@@ -94,8 +95,9 @@ function Cell<R, SR>({
   }
   function handleMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
     const element = event.currentTarget;
-      const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
-    const textElementWidth = parseInt(getComputedStyle(element.children[0]).width.replace('px', ''), 10) || containerWidth;
+    const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
+    const textElementWidth =
+      parseInt(getComputedStyle(element.children[0]).width.replace('px', ''), 10) || containerWidth;
 
     if (textElementWidth > containerWidth) {
       // Store original styles
@@ -104,29 +106,27 @@ function Cell<R, SR>({
         zIndex: element.style.zIndex,
         boxShadow: element.style.boxShadow
       };
-  
+
       // Set new styles
-      element.style.width = "max-content";
-      element.style.zIndex = "100";
-      element.style.boxShadow= "0px 0px 8px 1px rgba(0,0,0,0.38)";
-  
+      element.style.width = 'max-content';
+      element.style.zIndex = '100';
+      element.style.boxShadow = '0px 0px 8px 1px rgba(0,0,0,0.38)';
+
       // Add mouse leave event listener
-      const handleMouseLeave : (event: MouseEvent) => void  = (event) => {
+      const handleMouseLeave: (event: MouseEvent) => void = (event) => {
         // Restore original styles
         element.style.width = originalStyles.width;
         element.style.zIndex = originalStyles.zIndex;
         element.style.boxShadow = originalStyles.boxShadow;
-  
+
         // Remove event listener
         element.removeEventListener('mouseleave', handleMouseLeave);
       };
-      
+
       // Add mouse leave event listener
       element.addEventListener('mouseleave', handleMouseLeave);
     }
   }
-  
-
 
   return (
     <div
@@ -137,47 +137,75 @@ function Cell<R, SR>({
       aria-readonly={!isEditable || undefined}
       tabIndex={tabIndex}
       className={className}
-      style={getCellStyle(column, colSpan)}
+      style={{
+        ...getCellStyle(column, colSpan),
+        ...getEditCellStyle(column, colSpan)
+      }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
       onFocus={onFocus}
       onMouseEnter={handleMouseEnter}
-
-      
-      
-
       {...props}
     >
+      {column.editable && (
+        <div
+          className="rdg-cell-container"
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            padding: ' 0 .5rem',
+            width: '90%',
+            height: '60%',
 
-
-      <div className='rdg-cell-container' style={{
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        padding:' 0 .5rem',
-        width:'inherit',
-        height:'100%',
-        display:'flex',
-        justifyContent: column.align ?? "start",
-        alignItems:'center',
-        border: column.editable ? 'solid 1.5px grey':"",
-        borderRadius: column.editable ? '4px':""
-      
-      }}>
-
-{column.renderCell({
-        column,
-        row,
-        rowIdx,
-        isCellEditable: isEditable,
-        tabIndex: childTabIndex,
-        onRowChange: handleRowChange
-      })}
-   </div>
-</div>
-
-
+            display: 'flex',
+            justifyContent: column.align ?? 'start',
+            alignItems: 'center',
+            border: 'solid 1.5px grey',
+            borderRadius: '2px'
+          }}
+        >
+          {column.renderCell({
+            column,
+            row,
+            rowIdx,
+            isCellEditable: isEditable,
+            tabIndex: childTabIndex,
+            onRowChange: handleRowChange,
+            isRowSelectable: isRowSelectable
+          })}
+        </div>
+      )}
+      {!column.editable && (
+        <div
+          className="rdg-cell-container"
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            padding: ' 0 .5rem',
+            width: 'inherit',
+            height: '100%',
+            display: 'flex',
+            justifyContent: column.align ?? 'start',
+            alignItems: 'center',
+            border: column.editable ? 'solid 1.5px grey' : '',
+            borderRadius: column.editable ? '4px' : ''
+          }}
+        >
+          {column.renderCell({
+            column,
+            row,
+            rowIdx,
+            isCellEditable: isEditable,
+            tabIndex: childTabIndex,
+            onRowChange: handleRowChange,
+            isRowSelectable
+          })}
+        </div>
+      )}
+    </div>
   );
 }
 

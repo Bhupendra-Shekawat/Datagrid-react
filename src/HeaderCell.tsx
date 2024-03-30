@@ -10,7 +10,7 @@ import {
   getHeaderCellStyle,
   stopPropagation
 } from './utils';
-import type { CalculatedColumn, ColumnOrColumnGroup, Maybe, OnHeaderAction, SortColumn } from './types';
+import type { CalculatedColumn, ColumnOrColumnGroup, OnHeaderAction, SortColumn } from './types';
 import type { HeaderRowProps } from './HeaderRow';
 import defaultRenderHeaderCell from './renderHeaderCell';
 
@@ -71,7 +71,7 @@ export interface HeaderCellProps<R, SR> extends SharedHeaderRowProps<R, SR> {
   isCellSelected: boolean;
   dragDropKey: string;
   rawColumns: readonly ColumnOrColumnGroup<R, SR>[];
-  onHeaderAction: OnHeaderAction
+  onHeaderAction: OnHeaderAction;
 }
 
 export default function HeaderCell<R, SR>({
@@ -183,23 +183,18 @@ export default function HeaderCell<R, SR>({
   }
 
   function onClick(event: React.MouseEvent<HTMLSpanElement>) {
-    console.log(event)
+    // console.log(event);
     selectCell({ idx: column.idx, rowIdx });
     if (sortable) {
       onSort(event.ctrlKey || event.metaKey);
     }
   }
   function handleRightClick(event: React.MouseEvent<HTMLSpanElement>) {
-    
-    
-    event.preventDefault()
-    if(onHeaderAction){
-      onHeaderAction( column.idx,'FROZEN')
+    event.preventDefault();
+    if (onHeaderAction) {
+      onHeaderAction(column.key, 'FROZEN');
     }
     selectCell({ idx: column.idx, rowIdx });
-    
-    
-
   }
   function onDoubleClick() {
     onColumnResize(column, 'max-content');
@@ -295,43 +290,39 @@ export default function HeaderCell<R, SR>({
       onFocus={handleFocus}
       onClick={onClick}
       onKeyDown={sortable ? onKeyDown : undefined}
-    
       {...draggableProps}
     >
-      
-      <div className='rdg-cell-container' style={{
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        padding:' 0 .5rem',
-        width:'inherit',
-        height:'100%',
-        display:'flex',
-        alignItems : column.headerAlign?? column.align ??"",
-        justifyContent:'center',
-        flexDirection:'column'
-      
-      }}>
-      
+      <div
+        className="rdg-cell-container"
+        style={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          padding: ' 0 .5rem',
+          width: 'inherit',
+          height: '100%',
+          display: 'flex',
+          alignItems: column.headerAlign ?? column.align ?? '',
+          justifyContent: 'center',
+          flexDirection: 'column'
+        }}
+      >
+        {renderHeaderCell({
+          column,
+          sortDirection,
+          priority,
+          tabIndex: childTabIndex
+        })}
 
-
-      {renderHeaderCell({
-        column,
-        sortDirection,
-        priority,
-        tabIndex: childTabIndex
-      })}
-
-      {resizable && (
-        <div
-          className={resizeHandleClassname}
-          onClick={stopPropagation}
-          onDoubleClick={onDoubleClick}
-          onPointerDown={onPointerDown}
-        />
-      )}
+        {resizable && (
+          <div
+            className={resizeHandleClassname}
+            onClick={stopPropagation}
+            onDoubleClick={onDoubleClick}
+            onPointerDown={onPointerDown}
+          />
+        )}
       </div>
-
     </div>
   );
 }

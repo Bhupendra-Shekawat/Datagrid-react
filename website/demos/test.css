@@ -1,0 +1,9 @@
+.success {
+  /* background-color: blue; */
+}
+.success > :first-child {
+  border-left: solid 5px green;
+}
+.danger > :first-child {
+  border-left: solid 5px rgb(228, 88, 88);
+}

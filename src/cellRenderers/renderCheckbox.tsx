@@ -23,8 +23,6 @@ const checkboxInput = css`
   }
 `;
 
-const checkboxInputClassname = `rdg-checkbox-input ${checkboxInput}`;
-
 const checkbox = css`
   @layer rdg.CheckboxIcon {
     content: '';
@@ -44,8 +42,6 @@ const checkbox = css`
     }
   }
 `;
-
-const checkboxClassname = `rdg-checkbox ${checkbox}`;
 
 const checkboxLabelDisabled = css`
   @layer rdg.CheckboxLabel {
@@ -71,18 +67,14 @@ export function renderCheckbox({ onChange, ...props }: RenderCheckboxProps) {
         [checkboxLabelDisabledClassname]: props.disabled
       })}
     >
-      
       <input
         type="checkbox"
         style={{
-          backgroundColor:'red',
-          display:'none'
+          accentColor: 'var(--primary-color)'
         }}
         {...props}
-        className={checkboxInputClassname}
         onChange={handleChange}
       />
-      <div className={checkboxClassname} />
     </label>
   );
 }

@@ -187,6 +187,7 @@ export default function RowGrouping({ direction }: Props) {
 
       <TreeDataGrid
         columns={columns}
+        enableTableExport={true}
         rows={rows}
         rowKeyGetter={rowKeyGetter}
         selectedRows={selectedRows}

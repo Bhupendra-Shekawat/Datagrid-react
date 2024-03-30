@@ -22,11 +22,18 @@ function HeaderRenderer(props: RenderHeaderCellProps<unknown>) {
 function SelectFormatter(props: RenderCellProps<unknown>) {
   const [isRowSelected, onRowSelectionChange] = useRowSelection();
 
+  let isRowDisabled: boolean = true;
+  if (props.isRowSelectable) {
+    // debugger;
+    isRowDisabled = props.isRowSelectable(props.row, props.column);
+    console.log(props);
+  }
   return (
     <SelectCellFormatter
       aria-label="Select"
       tabIndex={props.tabIndex}
       value={isRowSelected}
+      disabled={!isRowDisabled}
       onChange={(checked, isShiftClick) => {
         onRowSelectionChange({ type: 'ROW', row: props.row, checked, isShiftClick });
       }}
@@ -42,6 +49,7 @@ function SelectGroupFormatter(props: RenderGroupCellProps<unknown>) {
       aria-label="Select Group"
       tabIndex={props.tabIndex}
       value={isRowSelected}
+      // disabled
       onChange={(checked) => {
         onRowSelectionChange({ type: 'ROW', row: props.row, checked, isShiftClick: false });
       }}

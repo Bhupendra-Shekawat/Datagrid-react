@@ -34,6 +34,19 @@ const cellEditing = css`
     padding: 0;
   }
 `;
+// const zoomAnimation = css`
+// @keyframes zoomIn {
+//   from {
+//     opacity: 0;
+//     transform: scale(0); 
+//   }
+//   to {
+//     opacity: 1;
+//     transform: scale(1);
+//   }
+// }
+// `
+
 
 type SharedCellRendererProps<R, SR> = Pick<CellRendererProps<R, SR>, 'colSpan'>;
 
@@ -176,10 +189,17 @@ export default function EditCell<R, SR>({
       aria-colspan={colSpan}
       aria-selected
       className={className}
-      style={getCellStyle(column, colSpan)}
+      style={{...getCellStyle(column, colSpan),display:"flex",justifyContent:'center',alignItems:'center'}}
       onKeyDown={handleKeyDown}
       onMouseDownCapture={cancelFrameRequest}
     >
+      <div style={{
+        width:'90%',
+        height:'80%',
+      }}
+      
+      >
+
       {column.renderEditCell != null && (
         <>
           {column.renderEditCell({
@@ -199,6 +219,8 @@ export default function EditCell<R, SR>({
             })}
         </>
       )}
+      </div>
+
     </div>
   );
 }

@@ -2,7 +2,7 @@ import DataGrid, { type ColumnOrColumnGroup } from '../../src';
 import { renderCoordinates } from './renderers';
 import type { Props } from './types';
 
-const columns: readonly ColumnOrColumnGroup<number, number>[] = [
+const columns: ColumnOrColumnGroup<number, number>[] = [
   { key: '1', name: 'Column 1' },
   {
     name: 'Group 1',
@@ -86,13 +86,14 @@ const columns: readonly ColumnOrColumnGroup<number, number>[] = [
   }
 ];
 
-const rows: readonly number[] = Array.from({ length: 100 }, (_, i) => i);
+const rows: number[] = Array.from({ length: 100 }, (_, i) => i);
 
 export default function ColumnGrouping({ direction }: Props) {
   return (
     <DataGrid
       columns={columns}
       rows={rows}
+      // features={{ frozenOnHeaderClick: true }}
       topSummaryRows={[0]}
       bottomSummaryRows={[6]}
       className="fill-grid"

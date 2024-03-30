@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { faker } from '@faker-js/faker';
 import { css } from '@linaria/core';
 
+import '../index.css';
+
 import DataGrid, {
   SelectCellFormatter,
   SelectColumn,
@@ -71,10 +73,7 @@ interface Row {
   available: boolean;
 }
 
-function getColumns(
-  countries: readonly string[],
-  direction: Direction
-):  Column<Row, SummaryRow>[] {
+function getColumns(countries: readonly string[], direction: Direction): Column<Row, SummaryRow>[] {
   return [
     SelectColumn,
     {
@@ -90,7 +89,7 @@ function getColumns(
       key: 'title',
       name: 'Task',
       frozen: true,
-      editable:true,
+      editable: true,
       renderEditCell: textEditor,
       renderSummaryCell({ row }) {
         return `${row.totalCount} records`;
@@ -238,7 +237,6 @@ function getColumns(
 }
 
 function rowKeyGetter(row: Row) {
-  // console.log(row,'row getter')
   return row.id;
 }
 
@@ -325,7 +323,7 @@ export default function CommonFeatures({ direction }: Props) {
 
   const sortedRows = useMemo((): readonly Row[] => {
     if (sortColumns.length === 0) return rows;
-
+    debugger;
     return [...rows].sort((a, b) => {
       for (const sort of sortColumns) {
         const comparator = getComparator(sort.columnKey);
@@ -337,12 +335,12 @@ export default function CommonFeatures({ direction }: Props) {
       return 0;
     });
   }, [rows, sortColumns]);
-  const handleSelectRow = (data:any)=>{
-    setSelectedRows(data)
-    console.log(data)
-  }
+  const handleSelectRow = (data: any) => {
+    setSelectedRows(data);
+  };
   const gridElement = (
     <DataGrid
+      enableTableExport={true}
       rowKeyGetter={rowKeyGetter}
       columns={columns}
       rows={sortedRows}
@@ -350,7 +348,10 @@ export default function CommonFeatures({ direction }: Props) {
         sortable: true,
         resizable: true
       }}
-      getRowId='area'
+      isRowSelectable={(row, col) => {
+        return row.id == 1;
+      }}
+      getRowId="area"
       selectedRows={selectedRows}
       onSelectedRowsChange={handleSelectRow}
       onRowsChange={setRows}
@@ -360,7 +361,7 @@ export default function CommonFeatures({ direction }: Props) {
       bottomSummaryRows={summaryRows}
       className="fill-grid"
       direction={direction}
-      onCellEditCommit={(arg,event)=>console.log(arg,event)}
+      onCellEditCommit={(arg, event) => console.log(arg, event)}
     />
   );
 

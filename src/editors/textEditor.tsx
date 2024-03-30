@@ -77,8 +77,8 @@ export default function textEditor<TRow, TSummaryRow>({
             style={{
               border:"2px solid grey",
               padding:'.5rem',
-              backgroundColor:'hsl(207deg 27.27% 79.63%)',
-              borderRadius:'4px'
+              backgroundColor:'hsl(207deg 27.27% 95.63%)',
+              borderRadius:'2px'
             }}
             ref={autoFocusAndSelect}
             value={row[column.key as keyof TRow] as unknown as string}
@@ -96,8 +96,8 @@ export default function textEditor<TRow, TSummaryRow>({
         style={{
           border:"2px solid grey",
           padding:'.5rem',
-          backgroundColor:'hsl(207deg 27.27% 79.63%)',
-          borderRadius:'4px'
+          backgroundColor:'hsl(207deg 27.27% 95.63%)',
+          borderRadius:'2px'
         }}
         ref={autoFocusAndSelect}
         value={row[column.key as keyof TRow] as unknown as string}

@@ -7,7 +7,7 @@ body {
 
 :root {
   color-scheme: light dark;
-
+  --primary-color: #235789;
   @media (prefers-color-scheme: light) {
     background-color: #fff;
     color: #111;

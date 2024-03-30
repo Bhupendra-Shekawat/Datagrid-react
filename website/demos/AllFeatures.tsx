@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import { faker } from '@faker-js/faker';
 import { css } from '@linaria/core';
+
 import type { Column, CopyEvent, FillEvent, PasteEvent, TreeDataGrid } from '../../src';
+import DataGrid, { SelectColumn, textEditor } from '../../src';
 import { renderAvatar, renderDropdown } from './renderers';
 import type { Props } from './types';
-import DataGrid, {SelectColumn,textEditor} from '../../src'
+
+import './test.css';
+
 // import "@cworks/react-datagrid/lib/styles.css"
 const highlightClassname = css`
-  .rdg-cell {
-    background-color: #9370db;
+  .rdg-cell:first-of-type {
+    // background-color: #9370db;
+    border-left: solid 5px green;
     color: white;
   }
 
@@ -37,20 +42,18 @@ export interface Row {
 function rowKeyGetter(row: Row) {
   return row.id;
 }
-let handleOnClick =()=>{
-
-}
-function testingfunc (){
-  return <p onClick={handleOnClick}> testing </p>
+let handleOnClick = () => {};
+function testingfunc() {
+  return <p onClick={handleOnClick}> testing </p>;
 }
 
-const columns: readonly Column<Row>[] = [
+const columns: Column<Row>[] = [
   SelectColumn,
   {
     key: 'id',
     name: 'ID',
     width: 80,
-    hide:true,
+    hide: true,
     resizable: true,
     frozen: true
   },
@@ -58,7 +61,7 @@ const columns: readonly Column<Row>[] = [
     key: 'avatar',
     name: 'Avatar',
     width: 40,
-    hide:true,
+    hide: true,
     resizable: true,
     renderCell: renderAvatar
   },
@@ -68,7 +71,7 @@ const columns: readonly Column<Row>[] = [
     width: 200,
     resizable: true,
     renderEditCell: renderDropdown,
-  renderHeaderCell: ()=> <p>Title</p>
+    renderHeaderCell: () => <p>Title</p>
   },
   {
     key: 'firstName',
@@ -76,11 +79,11 @@ const columns: readonly Column<Row>[] = [
     width: 200,
     resizable: true,
     frozen: true,
-    editable:true,
-    type:'select',
-    headerAlign:'end',
-    align:'end',
-    options:['abc','bcd'],
+    editable: true,
+    type: 'select',
+    headerAlign: 'end',
+    align: 'end',
+    options: ['abc', 'bcd'],
     renderEditCell: textEditor
   },
   {
@@ -207,17 +210,15 @@ export default function AllFeatures({ direction }: Props) {
       navigator.clipboard.writeText(sourceRow[sourceColumnKey as keyof Row]);
     }
   }
-  console.log(selectedRows)
-  function onHeaderAction (colIndex:string|number,actionRef:string|number){
-    
-    // columns[6].frozen = true
-    // columns = [...columns]
-    // console.log(columns)
+
+  function onHeaderAction(colIndex: string | number, actionRef: string | number) {
+    // debugger;
   }
 
   return (
     <DataGrid
       columns={columns}
+      features={{ frozenOnHeaderClick: true }}
       rows={rows}
       rowKeyGetter={rowKeyGetter}
       onRowsChange={setRows}
@@ -228,10 +229,9 @@ export default function AllFeatures({ direction }: Props) {
       selectedRows={selectedRows}
       onHeaderAction={onHeaderAction}
       onSelectedRowsChange={setSelectedRows}
+      // isRowSelectable={(row, col) => row.firstName !== 'Nedra'}
       className="fill-grid"
-      rowClass={(row, index) =>
-        row.id.includes('7') || index === 0 ? highlightClassname : undefined
-      }
+      rowClass={(row, index) => (row.id.includes('7') || index === 0 ? 'success' : 'danger')}
       direction={direction}
       onCellClick={(args, event) => {
         if (args.column.key === 'title') {

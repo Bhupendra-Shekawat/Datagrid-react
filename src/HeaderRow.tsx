@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import clsx from 'clsx';
 
 import { getColSpan } from './utils';
-import type { CalculatedColumn, ColumnOrColumnGroup, Direction, Maybe, OnHeaderAction, Position } from './types';
+import type { CalculatedColumn, ColumnOrColumnGroup, Direction, OnHeaderAction, Position } from './types';
 import type { DataGridProps } from './DataGrid';
 import HeaderCell from './HeaderCell';
 import { cell, cellFrozen } from './style/cell';

@@ -28,43 +28,78 @@ function createRows(): Row[] {
   return rows;
 }
 
-const columns: Column<Row>[] = [
-  {
-    key: 'id',
-    name: 'ID',
-    width: 80
-  },
-  {
-    key: 'task',
-    name: 'Title',
-    resizable: true,
-    sortable: true,
-    draggable: true
-  },
-  {
-    key: 'priority',
-    name: 'Priority',
-    resizable: true,
-    sortable: true,
-    draggable: true
-  },
-  {
-    key: 'issueType',
-    name: 'Issue Type',
-    resizable: true,
-    sortable: true,
-    draggable: true
-  },
-  {
-    key: 'complete',
-    name: '% Complete',
-    resizable: true,
-    sortable: true,
-    draggable: true
-  }
-];
-
 export default function ColumnsReordering({ direction }: Props) {
+  const [columns, setColumns] = useState([
+    {
+      key: 'id',
+      name: 'ID',
+      width: 80
+    },
+    {
+      key: 'task',
+      name: 'Title',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    },
+    {
+      key: 'priority',
+      name: 'Priority',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    },
+    {
+      key: 'issueType',
+      name: 'Issue Type',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    },
+    {
+      key: 'complete',
+      name: '% Complete',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    },
+    {
+      key: 'complete',
+      name: '% Complete',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    },
+    {
+      key: 'complete',
+      name: '% Complete',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    },
+    {
+      key: 'complete',
+      name: '% Complete',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    },
+    {
+      key: 'complete',
+      name: '% Complete',
+      resizable: true,
+      sortable: true,
+      draggable: true,
+      width: '500px'
+    }
+  ]);
   const [rows] = useState(createRows);
   const [columnsOrder, setColumnsOrder] = useState((): readonly number[] =>
     columns.map((_, index) => index)
@@ -98,30 +133,34 @@ export default function ColumnsReordering({ direction }: Props) {
     return direction === 'DESC' ? sortedRows.reverse() : sortedRows;
   }, [rows, sortColumns]);
 
-  function onColumnsReorder(sourceKey: string, targetKey: string) {
-    setColumnsOrder((columnsOrder) => {
-      const sourceColumnOrderIndex = columnsOrder.findIndex(
-        (index) => columns[index].key === sourceKey
-      );
-      const targetColumnOrderIndex = columnsOrder.findIndex(
-        (index) => columns[index].key === targetKey
-      );
-      const sourceColumnOrder = columnsOrder[sourceColumnOrderIndex];
-      const newColumnsOrder = columnsOrder.toSpliced(sourceColumnOrderIndex, 1);
-      newColumnsOrder.splice(targetColumnOrderIndex, 0, sourceColumnOrder);
-      return newColumnsOrder;
-    });
-  }
+  let onHeaderAction: (idx: number | string, ref: string) => void = (idx, ref) => {
+    let newData = [];
+    reorderedColumns.forEach((i, index) => {
+      if (index == idx) {
+        // debugger;
 
+        newData.push({
+          ...i,
+          frozen: i.frozen ? !i.frozen : true
+        });
+        return;
+      }
+      newData.push(i);
+    });
+    setColumns(newData);
+    setColumnsOrder((prev) => [...prev]);
+  };
   return (
     <DataGrid
       columns={reorderedColumns}
       rows={sortedRows}
+      features={{ frozenOnHeaderClick: true }}
       sortColumns={sortColumns}
       onSortColumnsChange={onSortColumnsChange}
       direction={direction}
       defaultColumnOptions={{ width: '1fr' }}
-      onColumnsReorder={onColumnsReorder}
+      // onColumnsReorder={onColumnsReorder}
+      onHeaderAction={onHeaderAction}
     />
   );
 }

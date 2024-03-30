@@ -29,8 +29,8 @@ export function getHeaderCellStyle<R, SR>(
       gridRowStart: 1,
       gridRowEnd,
       paddingBlockStart,
-    textAlign: column.headerAlign ?? column.align ?? 'start',
-    
+       textAlign: column.headerAlign ?? column.align ?? 'start',
+      // padding:'.5rem'
     };
   }
 
@@ -40,7 +40,7 @@ export function getHeaderCellStyle<R, SR>(
     gridRowEnd,
     paddingBlockStart,
     textAlign: column.headerAlign ?? column.align ?? 'start',
-
+    // padding:'.5rem'
 
   };
 }
@@ -57,8 +57,24 @@ export function getCellStyle<R, SR>(
     textAlign: column.align??'start',
     cursor: column.editable && column.type !== 'select' ? 'text':"pointer",
     padding:'.2rem'
+ 
 
   };
+}
+export function getEditCellStyle<R, SR>(
+  column: CalculatedColumn<R, SR>,
+  colSpan = 1,
+): React.CSSProperties {
+  // const index = column.idx + 1;
+  if(column.editable){
+
+    return {
+      display:'flex',
+      alignItems:'center',
+      justifyContent:'center'
+    };
+  }
+  return {}
 }
 
 export function getCellClassname<R, SR>(

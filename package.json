@@ -1,6 +1,6 @@
 {
   "name": "@cworks/react-datagrid",
-  "version": "0.0.11",
+  "version": "0.0.14",
   "license": "MIT",
   "description": "Feature-rich and customizable data grid React component",
   "keywords": [
@@ -47,7 +47,10 @@
     "postpublish": "git push --follow-tags origin HEAD"
   },
   "dependencies": {
+    "@mui/icons-material": "^5.15.9",
+    "@mui/material": "^5.10.7",
     "clsx": "^2.0.0"
+
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
@@ -104,8 +107,8 @@
     "vitest": "^1.2.0"
   },
   "peerDependencies": {
-    "react": "^18.0",
-    "react-dom": "^18.0",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@mui/icons-material": "^5.15.9",
@@ -114,7 +117,7 @@
     "@mui/styles": "^5.11.2",
     "@mui/system": "^5.13.2",
     "@mui/x-date-pickers": "^5.0.1",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4"
+    "react": "^18.0",
+    "react-dom": "^18.0"
   }
 }

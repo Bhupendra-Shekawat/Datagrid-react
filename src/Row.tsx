@@ -29,6 +29,7 @@ function Row<R, SR>(
     onMouseEnter,
     onRowChange,
     selectCell,
+    isRowSelectable,
     ...props
   }: RenderRowProps<R, SR>,
   ref: React.Ref<HTMLDivElement>
@@ -81,6 +82,7 @@ function Row<R, SR>(
           onDoubleClick={onCellDoubleClick}
           onContextMenu={onCellContextMenu}
           onRowChange={handleRowChange}
+          isRowSelectable={isRowSelectable}
           selectCell={selectCell}
         />
       );

@@ -1,6 +1,13 @@
+import * as React from 'react';
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import type { Key, KeyboardEvent, RefAttributes } from 'react';
 import { flushSync } from 'react-dom';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton } from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+// import { R } from 'vitest/dist/reporters-MmQN-57K.js';
+import { css } from '@linaria/core';
 import clsx from 'clsx';
 
 import {
@@ -28,6 +35,7 @@ import {
   scrollIntoView,
   sign
 } from './utils';
+import { exportToCsv, exportToPdf } from './utils/exportUtils';
 import type {
   CalculatedColumn,
   CellClickArgs,
@@ -42,6 +50,7 @@ import type {
   Direction,
   EditCellCommitArgs,
   FillEvent,
+  IsRowSelectable,
   Maybe,
   OnHeaderAction,
   PasteEvent,
@@ -49,7 +58,8 @@ import type {
   Renderers,
   RowsChangeData,
   SelectRowEvent,
-  SortColumn
+  SortColumn,
+  TableFeatures
 } from './types';
 import { renderCheckbox as defaultRenderCheckbox } from './cellRenderers';
 import {
@@ -72,7 +82,6 @@ import {
 } from './style/core';
 import { rowSelected, rowSelectedWithFrozenCell } from './style/row';
 import SummaryRow from './SummaryRow';
-import { css } from '@linaria/core';
 
 export interface SelectCellState extends Position {
   readonly mode: 'SELECT';
@@ -111,9 +120,11 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
    * Grid and data Props
    */
   /** An array of objects representing each column on the grid */
-  columns: readonly ColumnOrColumnGroup<R, SR>[];
+  columns: ColumnOrColumnGroup<R, SR>[];
   /** A function called for each rendered row that should return a plain key/value pair object */
-  rows: readonly R[];
+  rows: R[];
+  readonly enableTableExport?: boolean;
+
   /**
    * Rows to be pinned at the top of the rows view for summary, the vertical scroll bar will not scroll these rows.
    */
@@ -163,8 +174,9 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
   onFill?: Maybe<(event: FillEvent<R>) => R>;
   onCopy?: Maybe<(event: CopyEvent<R>) => void>;
   onPaste?: Maybe<(event: PasteEvent<R>) => R>;
-  getRowId?: string | "id"
+  getRowId?: string | 'id';
   infiniteScroll?: boolean;
+  isRowSelectable?: Maybe<(row: R, column: CalculatedColumn<R, SR>) => boolean>;
   /**
    * Event props
    */
@@ -175,12 +187,19 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
   /** Function called whenever a cell is right clicked */
   onCellContextMenu?: Maybe<(args: CellClickArgs<R, SR>, event: CellMouseEvent) => void>;
   onCellKeyDown?: Maybe<(args: CellKeyDownArgs<R, SR>, event: CellKeyboardEvent) => void>;
-  onCellEditCommit?: Maybe<(args: EditCellCommitArgs<R, SR>, event?: React.KeyboardEvent<HTMLDivElement>) => void>;
+  onCellEditCommit?: Maybe<
+    (args: EditCellCommitArgs<R, SR>, event?: React.KeyboardEvent<HTMLDivElement>) => void
+  >;
 
   /** Function called whenever cell selection is changed */
   onSelectedCellChange?: Maybe<(args: CellSelectArgs<R, SR>) => void>;
   /** Called when the grid is scrolled */
-  onScrollBottom?: Maybe<(event: React.UIEvent<HTMLDivElement>,setIsLoading: React.Dispatch<React.SetStateAction<boolean>>) => void>;
+  onScrollBottom?: Maybe<
+    (
+      event: React.UIEvent<HTMLDivElement>,
+      setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+    ) => void
+  >;
   onScroll?: Maybe<(event: React.UIEvent<HTMLDivElement>) => void>;
   /** Called when a column is resized */
   onColumnResize?: Maybe<(idx: number, width: number) => void>;
@@ -195,7 +214,10 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
    */
   /** @default true */
   enableVirtualization?: Maybe<boolean>;
-
+  /**
+   * Function to set Features
+   */
+  features?: Maybe<TableFeatures>;
   /**
    * Miscellaneousre
    */
@@ -218,6 +240,13 @@ const loadMoreRowsClassname = css`
   line-height: 35px;
   background: rgb(0 0 0 / 0.6);
 `;
+const toolbarClassname = css`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-block-end: 8px;
+`;
+
 /**
  * Main API Component to render a data grid of rows and columns
  *
@@ -231,13 +260,14 @@ function DataGrid<R, SR, K extends Key>(
 ) {
   const {
     // Grid and data Props
-    columns: rawColumns,
+    columns: initialColumn,
     rows,
     topSummaryRows,
     bottomSummaryRows,
     rowKeyGetter,
     onRowsChange,
-    getRowId="id",
+    getRowId = 'id',
+
     // Dimensions props
     rowHeight: rawRowHeight,
     headerRowHeight: rawHeaderRowHeight,
@@ -245,10 +275,15 @@ function DataGrid<R, SR, K extends Key>(
     // Feature props
     selectedRows,
     onSelectedRowsChange,
-    sortColumns,
+    isRowSelectable,
+    sortColumns: rawSortedColumns,
     onSortColumnsChange,
-    defaultColumnOptions,
     onHeaderAction,
+    defaultColumnOptions,
+    enableTableExport,
+    infiniteScroll = false,
+
+    // addRowClass,
     // Event props
     onCellClick,
     onCellDoubleClick,
@@ -258,12 +293,12 @@ function DataGrid<R, SR, K extends Key>(
     onSelectedCellChange,
     onScroll,
     onScrollBottom,
-    infiniteScroll=false,
     onColumnResize,
     onColumnsReorder,
     onFill,
     onCopy,
     onPaste,
+    features,
     // Toggles and modes
     enableVirtualization: rawEnableVirtualization,
     // Miscellaneous
@@ -284,6 +319,52 @@ function DataGrid<R, SR, K extends Key>(
   /**
    * defaults
    */
+
+  //Column reordering
+
+  const [columnsOrder, setColumnsOrder] = useState((): number[] =>
+    initialColumn?.map((_, index) => index)
+  );
+  const [editableColumns, setEditableColumns] = useState((): ColumnOrColumnGroup<R, SR>[] =>
+    initialColumn?.map((_) => _)
+  );
+  const rawColumns: ColumnOrColumnGroup<R, SR>[] = useMemo(() => {
+    let reorderedColumns = columnsOrder.map((index) => editableColumns[index]);
+    // setEditableColumns(reorderedColumns)
+    return reorderedColumns;
+  }, [columnsOrder]);
+
+  function handleOnColumnsReorder(sourceKey: string, targetKey: string) {
+    setColumnsOrder((columnsOrder) => {
+      const sourceColumnOrderIndex = columnsOrder.findIndex(
+        (index) => columns[index].key === sourceKey
+      );
+      const targetColumnOrderIndex = columnsOrder.findIndex(
+        (index) => columns[index].key === targetKey
+      );
+      const sourceColumnOrder = columnsOrder[sourceColumnOrderIndex];
+      const newColumnsOrder = columnsOrder.toSpliced(sourceColumnOrderIndex, 1);
+      newColumnsOrder.splice(targetColumnOrderIndex, 0, sourceColumnOrder);
+      return newColumnsOrder;
+    });
+  }
+  let handleonHeaderAction: (idx: number | string, ref: string) => void = (idx, ref) => {
+    let newData: ColumnOrColumnGroup<R, SR>[] = [];
+
+    rawColumns.forEach((i, index) => {
+      if (i.key == idx) {
+        newData.push({
+          ...i,
+          frozen: i.frozen ? !i.frozen : true
+        });
+        return;
+      }
+      newData.push(i);
+    });
+    setEditableColumns(newData);
+    setColumnsOrder((prev) => [...prev]);
+  };
+
   const defaultRenderers = useDefaultRenderers<R, SR>();
   const role = rawRole ?? 'grid';
   const rowHeight = rawRowHeight ?? 35;
@@ -303,7 +384,7 @@ function DataGrid<R, SR, K extends Key>(
    */
   const [scrollTop, setScrollTop] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const [isLoading,setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [resizedColumnWidths, setResizedColumnWidths] = useState(
     (): ReadonlyMap<string, number> => new Map()
   );
@@ -343,6 +424,7 @@ function DataGrid<R, SR, K extends Key>(
     viewportWidth: gridWidth,
     enableVirtualization
   });
+
   const topSummaryRowsCount = topSummaryRows?.length ?? 0;
   const bottomSummaryRowsCount = bottomSummaryRows?.length ?? 0;
   const summaryRowsCount = topSummaryRowsCount + bottomSummaryRowsCount;
@@ -448,7 +530,11 @@ function DataGrid<R, SR, K extends Key>(
    * The identity of the wrapper function is stable so it won't break memoization
    */
   const handleColumnResizeLatest = useLatestFunc(handleColumnResize);
-  const onColumnsReorderLastest = useLatestFunc(onColumnsReorder);
+  const onColumnsReorderLastest = useLatestFunc(handleOnColumnsReorder);
+  const onHeaderActionLatest = useLatestFunc(
+    features?.frozenOnHeaderClick ? handleonHeaderAction : () => {}
+  );
+
   const onSortColumnsChangeLatest = useLatestFunc(onSortColumnsChange);
   const onCellClickLatest = useLatestFunc(onCellClick);
   const onCellDoubleClickLatest = useLatestFunc(onCellDoubleClick);
@@ -456,6 +542,8 @@ function DataGrid<R, SR, K extends Key>(
   const selectRowLatest = useLatestFunc(selectRow);
   const handleFormatterRowChangeLatest = useLatestFunc(updateRow);
   const selectCellLatest = useLatestFunc(selectCell);
+  const isRowSelectableLatest = useLatestFunc(isRowSelectable);
+
   const selectHeaderCellLatest = useLatestFunc(({ idx, rowIdx }: Position) => {
     selectCell({ rowIdx: minRowIdx + rowIdx - 1, idx });
   });
@@ -520,7 +608,7 @@ function DataGrid<R, SR, K extends Key>(
     if (args.type === 'HEADER') {
       const newSelectedRows = new Set(selectedRows);
       for (const row of rows) {
-        const rowKey = rowKeyGetter(row)?? (row as any)[getRowId];
+        const rowKey = rowKeyGetter(row) ?? (row as any)[getRowId];
         if (args.checked) {
           newSelectedRows.add(rowKey);
         } else {
@@ -571,8 +659,7 @@ function DataGrid<R, SR, K extends Key>(
         },
         cellEvent
       );
-      if(event.key == 'Enter'){
-
+      if (event.key == 'Enter') {
       }
       if (cellEvent.isGridDefaultPrevented()) return;
     }
@@ -634,25 +721,27 @@ function DataGrid<R, SR, K extends Key>(
     });
 
     function isAtBottom({ currentTarget }: React.UIEvent<HTMLDivElement>): boolean {
-      return currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight;
+      return (
+        currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight
+      );
     }
 
-    if(isLoading || !isAtBottom(event)) return;
-    
-    if(infiniteScroll){
-      onScrollBottom?.(event,setIsLoading);
-    }else{
-      onScroll?.(event)
+    if (isLoading || !isAtBottom(event)) return;
+
+    if (infiniteScroll) {
+      onScrollBottom?.(event, setIsLoading);
+    } else {
+      onScroll?.(event);
     }
   }
- function handleOnMouseEnter(event: React.MouseEvent<HTMLDivElement>){
-   let targetElement: HTMLDivElement =  event.currentTarget;
-   targetElement.style.overflow = 'scroll'
- }
- function handleOnMouseExit(event: React.MouseEvent<HTMLDivElement>){
-  let targetElement: HTMLDivElement =  event.currentTarget;
-  targetElement.style.overflow = 'hidden'
-}
+  function handleOnMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
+    let targetElement: HTMLDivElement = event.currentTarget;
+    targetElement.style.overflow = 'scroll';
+  }
+  function handleOnMouseExit(event: React.MouseEvent<HTMLDivElement>) {
+    let targetElement: HTMLDivElement = event.currentTarget;
+    targetElement.style.overflow = 'hidden';
+  }
   function updateRow(column: CalculatedColumn<R, SR>, rowIdx: number, row: R) {
     if (typeof onRowsChange !== 'function') return;
     if (row === rows[rowIdx]) return;
@@ -666,7 +755,7 @@ function DataGrid<R, SR, K extends Key>(
 
   function commitEditorChanges() {
     if (selectedPosition.mode !== 'EDIT') return;
-    
+
     updateRow(columns[selectedPosition.idx], selectedPosition.rowIdx, selectedPosition.row);
   }
 
@@ -1043,6 +1132,7 @@ function DataGrid<R, SR, K extends Key>(
           row,
           viewportColumns: rowColumns,
           isRowSelected,
+          isRowSelectable,
           onCellClick: onCellClickLatest,
           onCellDoubleClick: onCellDoubleClickLatest,
           onCellContextMenu: onCellContextMenuLatest,
@@ -1068,6 +1158,70 @@ function DataGrid<R, SR, K extends Key>(
     return rowElements;
   }
 
+  function BasicMenu({
+    gridElement,
+    rows,
+    columns
+  }: {
+    gridElement: any;
+    rows: readonly R[];
+    columns: readonly ColumnOrColumnGroup<R, SR>[];
+  }) {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      debugger;
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+    const [exporting, setExporting] = useState(0);
+
+    return (
+      <div>
+        <IconButton
+          id="basic-button"
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button'
+          }}
+        >
+          <MenuItem
+            onClick={async () => {
+              setExporting(1);
+              await exportToCsv(gridElement, 'CommonFeatures.csv', rows, columns);
+              setExporting(0);
+            }}
+          >
+            {exporting == 1 ? 'Exporting...' : 'Export as CSV'}
+          </MenuItem>
+          <MenuItem
+            onClick={async () => {
+              setExporting(2);
+              await exportToPdf(gridElement, 'CommonFeatures.pdf', rows, columns);
+              setExporting(0);
+            }}
+          >
+            {exporting == 2 ? 'Exporting...' : 'Export as PDF'}
+          </MenuItem>
+          <MenuItem onClick={handleClose}>Export as Excel</MenuItem>
+        </Menu>
+      </div>
+    );
+  }
+
   // Reset the positions if the current values are no longer valid. This can happen if a column or row is removed
   if (selectedPosition.idx > maxColIdx || selectedPosition.rowIdx > maxRowIdx) {
     setSelectedPosition({ idx: -1, rowIdx: minRowIdx - 1, mode: 'SELECT' });
@@ -1087,9 +1241,8 @@ function DataGrid<R, SR, K extends Key>(
 
   const isGroupRowFocused =
     selectedPosition.idx === -1 && selectedPosition.rowIdx !== minRowIdx - 1;
-console.log(columns)
-  return (
-    <>
+
+  const gridElement = (
     <div
       role={role}
       aria-label={ariaLabel}
@@ -1108,7 +1261,7 @@ console.log(columns)
       style={
         {
           ...style,
-          
+
           // set scrollPadding to correctly position non-sticky cells after scrolling
           scrollPaddingInlineStart:
             selectedPosition.idx > lastFrozenColumnIndex || scrollToPosition?.idx !== undefined
@@ -1127,8 +1280,7 @@ console.log(columns)
           '--rdg-summary-row-height': `${summaryRowHeight}px`,
           '--rdg-sign': isRtl ? -1 : 1,
           ...layoutCssVars,
-          overflow:'hidden'
-
+          overflow: 'hidden'
         } as unknown as React.CSSProperties
       }
       dir={direction}
@@ -1138,7 +1290,6 @@ console.log(columns)
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseExit}
       data-testid={testId}
-      
     >
       <DataGridDefaultRenderersProvider value={defaultGridComponents}>
         <RowSelectionChangeProvider value={selectRowLatest}>
@@ -1160,7 +1311,7 @@ console.log(columns)
               columns={getRowViewportColumns(mainHeaderRowIdx)}
               onColumnResize={handleColumnResizeLatest}
               onColumnsReorder={onColumnsReorderLastest}
-              sortColumns={sortColumns}
+              sortColumns={rawSortedColumns}
               onSortColumnsChange={onSortColumnsChangeLatest}
               lastFrozenColumnIndex={lastFrozenColumnIndex}
               selectedCellIdx={
@@ -1170,10 +1321,8 @@ console.log(columns)
               selectCell={selectHeaderCellLatest}
               shouldFocusGrid={!selectedCellIsWithinSelectionBounds}
               direction={direction}
-              onHeaderAction={onHeaderAction}
+              onHeaderAction={onHeaderActionLatest}
             />
-                 
-
           </RowSelectionProvider>
           {rows.length === 0 && noRowsFallback ? (
             noRowsFallback
@@ -1269,9 +1418,20 @@ console.log(columns)
         />
       )}
     </div>
-   {isLoading && <div className={loadMoreRowsClassname}>Loading more rows...</div> } 
-    </>
+  );
+  return (
+    <>
+      <>
+        {enableTableExport && (
+          <div className={toolbarClassname}>
+            <BasicMenu gridElement={gridElement} columns={columns} rows={rows} />
+          </div>
+        )}
+        {gridElement}
+      </>
 
+      {isLoading && <div className={loadMoreRowsClassname}>Loading more rows...</div>}
+    </>
   );
 }
 
