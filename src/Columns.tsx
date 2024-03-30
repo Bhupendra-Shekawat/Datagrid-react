@@ -27,6 +27,7 @@ function SelectFormatter(props: RenderCellProps<unknown>) {
     // debugger;
     isRowDisabled = props.isRowSelectable(props.row, props.column);
     console.log(props);
+    console.log(props);
   }
   return (
     <SelectCellFormatter
