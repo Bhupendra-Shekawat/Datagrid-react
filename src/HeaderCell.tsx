@@ -183,7 +183,6 @@ export default function HeaderCell<R, SR>({
   }
 
   function onClick(event: React.MouseEvent<HTMLSpanElement>) {
-    // console.log(event);
     selectCell({ idx: column.idx, rowIdx });
     if (sortable) {
       onSort(event.ctrlKey || event.metaKey);
@@ -295,16 +294,19 @@ export default function HeaderCell<R, SR>({
       <div
         className="rdg-cell-container"
         style={{
-          whiteSpace: 'nowrap',
+          // whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          padding: ' 0 .5rem',
-          width: 'inherit',
+          padding: ' 1rem .5rem',
+
           height: '100%',
           display: 'flex',
           alignItems: column.headerAlign ?? column.align ?? '',
           justifyContent: 'center',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          whiteSpace: 'break-spaces',
+          lineHeight: 'normal',
+          minWidth: '100%'
         }}
       >
         {renderHeaderCell({

@@ -50,7 +50,7 @@ import type {
   Direction,
   EditCellCommitArgs,
   FillEvent,
-  IsRowSelectable,
+  // IsRowSelectable,
   Maybe,
   OnHeaderAction,
   PasteEvent,
@@ -205,7 +205,7 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
   onColumnResize?: Maybe<(idx: number, width: number) => void>;
   /** Called when a column is reordered */
   onColumnsReorder?: Maybe<(sourceColumnKey: string, targetColumnKey: string) => void>;
-
+  onTableCustomization?: Maybe<(ref: string, col: ColumnOrColumnGroup<R, SR>[]) => void>;
   //* To get checkbox *//
   checkboxSelection?: boolean;
 
@@ -260,7 +260,7 @@ function DataGrid<R, SR, K extends Key>(
 ) {
   const {
     // Grid and data Props
-    columns: initialColumn,
+    columns: rawColumns,
     rows,
     topSummaryRows,
     bottomSummaryRows,
@@ -278,7 +278,7 @@ function DataGrid<R, SR, K extends Key>(
     isRowSelectable,
     sortColumns: rawSortedColumns,
     onSortColumnsChange,
-    onHeaderAction,
+    // onHeaderAction,
     defaultColumnOptions,
     enableTableExport,
     infiniteScroll = false,
@@ -295,6 +295,8 @@ function DataGrid<R, SR, K extends Key>(
     onScrollBottom,
     onColumnResize,
     onColumnsReorder,
+    onHeaderAction,
+    // onTableCustomization,
     onFill,
     onCopy,
     onPaste,
@@ -322,48 +324,56 @@ function DataGrid<R, SR, K extends Key>(
 
   //Column reordering
 
-  const [columnsOrder, setColumnsOrder] = useState((): number[] =>
-    initialColumn?.map((_, index) => index)
-  );
-  const [editableColumns, setEditableColumns] = useState((): ColumnOrColumnGroup<R, SR>[] =>
-    initialColumn?.map((_) => _)
-  );
-  const rawColumns: ColumnOrColumnGroup<R, SR>[] = useMemo(() => {
-    let reorderedColumns = columnsOrder.map((index) => editableColumns[index]);
-    // setEditableColumns(reorderedColumns)
-    return reorderedColumns;
-  }, [columnsOrder]);
+  // const [columnsOrder, setColumnsOrder] = useState((): number[] =>
+  //   initialColumn?.map((_, index) => index)
+  // );
+  // const [editableColumns, setEditableColumns] = useState((): ColumnOrColumnGroup<R, SR>[] =>
+  //   initialColumn?.map((_) => _)
+  // );
+  // const rawColumns: ColumnOrColumnGroup<R, SR>[] = useMemo(() => {
+  //   let reorderedColumns = columnsOrder.map((index) => editableColumns[index]);
+  //   // setEditableColumns(reorderedColumns)
+  //   console.log('column refresj');
+  //   return reorderedColumns;
+  // }, [columnsOrder]);
 
-  function handleOnColumnsReorder(sourceKey: string, targetKey: string) {
-    setColumnsOrder((columnsOrder) => {
-      const sourceColumnOrderIndex = columnsOrder.findIndex(
-        (index) => columns[index].key === sourceKey
-      );
-      const targetColumnOrderIndex = columnsOrder.findIndex(
-        (index) => columns[index].key === targetKey
-      );
-      const sourceColumnOrder = columnsOrder[sourceColumnOrderIndex];
-      const newColumnsOrder = columnsOrder.toSpliced(sourceColumnOrderIndex, 1);
-      newColumnsOrder.splice(targetColumnOrderIndex, 0, sourceColumnOrder);
-      return newColumnsOrder;
-    });
-  }
-  let handleonHeaderAction: (idx: number | string, ref: string) => void = (idx, ref) => {
-    let newData: ColumnOrColumnGroup<R, SR>[] = [];
+  // function handleOnColumnsReorder(sourceKey: string, targetKey: string) {
+  //   setColumnsOrder((columnsOrder) => {
+  //     const sourceColumnOrderIndex = columnsOrder.findIndex(
+  //       (index) => columns[index].key === sourceKey
+  //     );
+  //     const targetColumnOrderIndex = columnsOrder.findIndex(
+  //       (index) => columns[index].key === targetKey
+  //     );
+  //     const sourceColumnOrder = columnsOrder[sourceColumnOrderIndex];
+  //     const newColumnsOrder = columnsOrder.toSpliced(sourceColumnOrderIndex, 1);
+  //     newColumnsOrder.splice(targetColumnOrderIndex, 0, sourceColumnOrder);
+  //     if (onTableCustomization) {
+  //       onTableCustomization(
+  //         'COLUMN-REORDER',
+  //         newColumnsOrder.map((index) => editableColumns[index])
+  //       );
+  //     }
 
-    rawColumns.forEach((i, index) => {
-      if (i.key == idx) {
-        newData.push({
-          ...i,
-          frozen: i.frozen ? !i.frozen : true
-        });
-        return;
-      }
-      newData.push(i);
-    });
-    setEditableColumns(newData);
-    setColumnsOrder((prev) => [...prev]);
-  };
+  //     return newColumnsOrder;
+  //   });
+  // }
+  // let handleonHeaderAction: (idx: number | string, ref: string) => void = (idx, ref) => {
+  //   let newData: ColumnOrColumnGroup<R, SR>[] = [];
+
+  //   rawColumns.forEach((i, index) => {
+  //     if (i.key == idx) {
+  //       newData.push({
+  //         ...i,
+  //         frozen: i.frozen ? !i.frozen : true
+  //       });
+  //       return;
+  //     }
+  //     newData.push(i);
+  //   });
+  //   setEditableColumns(newData);
+  //   setColumnsOrder((prev) => [...prev]);
+  // };
 
   const defaultRenderers = useDefaultRenderers<R, SR>();
   const role = rawRole ?? 'grid';
@@ -530,9 +540,9 @@ function DataGrid<R, SR, K extends Key>(
    * The identity of the wrapper function is stable so it won't break memoization
    */
   const handleColumnResizeLatest = useLatestFunc(handleColumnResize);
-  const onColumnsReorderLastest = useLatestFunc(handleOnColumnsReorder);
+  const onColumnsReorderLastest = useLatestFunc(onColumnsReorder);
   const onHeaderActionLatest = useLatestFunc(
-    features?.frozenOnHeaderClick ? handleonHeaderAction : () => {}
+    features?.frozenOnHeaderClick ? onHeaderAction : () => {}
   );
 
   const onSortColumnsChangeLatest = useLatestFunc(onSortColumnsChange);
@@ -542,7 +552,7 @@ function DataGrid<R, SR, K extends Key>(
   const selectRowLatest = useLatestFunc(selectRow);
   const handleFormatterRowChangeLatest = useLatestFunc(updateRow);
   const selectCellLatest = useLatestFunc(selectCell);
-  const isRowSelectableLatest = useLatestFunc(isRowSelectable);
+  // const isRowSelectableLatest = useLatestFunc(isRowSelectable);
 
   const selectHeaderCellLatest = useLatestFunc(({ idx, rowIdx }: Position) => {
     selectCell({ rowIdx: minRowIdx + rowIdx - 1, idx });
@@ -735,12 +745,12 @@ function DataGrid<R, SR, K extends Key>(
     }
   }
   function handleOnMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
-    let targetElement: HTMLDivElement = event.currentTarget;
-    targetElement.style.overflow = 'scroll';
+    // let targetElement: HTMLDivElement = event.currentTarget;
+    // targetElement.style.overflow = 'scroll';
   }
   function handleOnMouseExit(event: React.MouseEvent<HTMLDivElement>) {
-    let targetElement: HTMLDivElement = event.currentTarget;
-    targetElement.style.overflow = 'hidden';
+    // let targetElement: HTMLDivElement = event.currentTarget;
+    // targetElement.style.overflow = 'hidden';
   }
   function updateRow(column: CalculatedColumn<R, SR>, rowIdx: number, row: R) {
     if (typeof onRowsChange !== 'function') return;
@@ -1279,8 +1289,7 @@ function DataGrid<R, SR, K extends Key>(
           '--rdg-header-row-height': `${headerRowHeight}px`,
           '--rdg-summary-row-height': `${summaryRowHeight}px`,
           '--rdg-sign': isRtl ? -1 : 1,
-          ...layoutCssVars,
-          overflow: 'hidden'
+          ...layoutCssVars
         } as unknown as React.CSSProperties
       }
       dir={direction}

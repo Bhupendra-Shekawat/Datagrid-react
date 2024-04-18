@@ -70,7 +70,8 @@ const columns: readonly Column<Row>[] = [
   SelectColumn,
   {
     key: 'country',
-    name: 'Country'
+    name: 'Country',
+    // frozen:false
   },
   {
     key: 'year',

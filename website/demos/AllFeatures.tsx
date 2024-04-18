@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { faker } from '@faker-js/faker';
-import { css } from '@linaria/core';
 
-import type { Column, CopyEvent, FillEvent, PasteEvent, TreeDataGrid } from '../../src';
+// import { css } from '@linaria/core';
+
+import type { Column, CopyEvent, FillEvent, PasteEvent } from '../../src';
 import DataGrid, { SelectColumn, textEditor } from '../../src';
 import { renderAvatar, renderDropdown } from './renderers';
 import type { Props } from './types';
@@ -10,17 +11,17 @@ import type { Props } from './types';
 import './test.css';
 
 // import "@cworks/react-datagrid/lib/styles.css"
-const highlightClassname = css`
-  .rdg-cell:first-of-type {
-    // background-color: #9370db;
-    border-left: solid 5px green;
-    color: white;
-  }
+// const highlightClassname = css`
+//   .rdg-cell:first-of-type {
+//     // background-color: #9370db;
+//     border-left: solid 5px green;
+//     color: white;
+//   }
 
-  &:hover .rdg-cell {
-    background-color: #800080;
-  }
-`;
+//   &:hover .rdg-cell {
+//     background-color: #800080;
+//   }
+// `;
 
 export interface Row {
   id: string;
@@ -43,9 +44,9 @@ function rowKeyGetter(row: Row) {
   return row.id;
 }
 let handleOnClick = () => {};
-function testingfunc() {
-  return <p onClick={handleOnClick}> testing </p>;
-}
+// function testingfunc() {
+//   return <p onClick={handleOnClick}> testing </p>;
+// }
 
 const columns: Column<Row>[] = [
   SelectColumn,
@@ -84,6 +85,7 @@ const columns: Column<Row>[] = [
     headerAlign: 'end',
     align: 'end',
     options: ['abc', 'bcd'],
+    tooltip: true,
     renderEditCell: textEditor
   },
   {
@@ -99,6 +101,7 @@ const columns: Column<Row>[] = [
     name: 'Email',
     width: 'max-content',
     resizable: true,
+    tooltip: true,
     renderEditCell: textEditor
   },
   {
@@ -134,12 +137,15 @@ const columns: Column<Row>[] = [
     name: 'Catch Phrase',
     width: 'max-content',
     resizable: true,
+    draggable: true,
     renderEditCell: textEditor
   },
   {
     key: 'companyName',
     name: 'Company Name',
     width: 200,
+    draggable: true,
+
     resizable: true,
     renderEditCell: textEditor
   },
@@ -229,6 +235,9 @@ export default function AllFeatures({ direction }: Props) {
       selectedRows={selectedRows}
       onHeaderAction={onHeaderAction}
       onSelectedRowsChange={setSelectedRows}
+      onTableCustomization={(ref, col) => {
+        // debugger;
+      }}
       // isRowSelectable={(row, col) => row.firstName !== 'Nedra'}
       className="fill-grid"
       rowClass={(row, index) => (row.id.includes('7') || index === 0 ? 'success' : 'danger')}

@@ -94,37 +94,54 @@ function Cell<R, SR>({
     onRowChange(column, newRow);
   }
   function handleMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
-    const element = event.currentTarget;
-    const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
-    const textElementWidth =
-      parseInt(getComputedStyle(element.children[0]).width.replace('px', ''), 10) || containerWidth;
+    if (!column.editable && column.tooltip) {
+      const element = event.currentTarget;
+      const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
+      const textElementWidth =
+        parseInt(getComputedStyle(element.children[0]).width.replace('px', ''), 10) ||
+        containerWidth;
+      if (textElementWidth > containerWidth) {
+        // Store original styles
+        const originalStyles = {
+          width: element.style.width,
+          zIndex: element.style.zIndex,
+          boxShadow: element.style.boxShadow,
+          maxWidth: element.style.maxWidth,
+          overflow: element.style.overflow,
+          height: element.style.height
+        };
 
-    if (textElementWidth > containerWidth) {
-      // Store original styles
-      const originalStyles = {
-        width: element.style.width,
-        zIndex: element.style.zIndex,
-        boxShadow: element.style.boxShadow
-      };
+        // Set new styles
+        // debugger;
+        element.style.width = 'max-content';
+        // element.style.backgroundColor = 'red';
 
-      // Set new styles
-      element.style.width = 'max-content';
-      element.style.zIndex = '100';
-      element.style.boxShadow = '0px 0px 8px 1px rgba(0,0,0,0.38)';
+        // element.style.height = '3rem';
 
-      // Add mouse leave event listener
-      const handleMouseLeave: (event: MouseEvent) => void = (event) => {
-        // Restore original styles
-        element.style.width = originalStyles.width;
-        element.style.zIndex = originalStyles.zIndex;
-        element.style.boxShadow = originalStyles.boxShadow;
+        element.style.maxWidth = '400px';
 
-        // Remove event listener
-        element.removeEventListener('mouseleave', handleMouseLeave);
-      };
+        element.style.zIndex = '100';
+        element.style.boxShadow = '0px 0px 8px 1px rgba(0,0,0,0.38)';
+        element.style.overflow = 'auto';
+        // element.style.backgroundColor = 'red';
 
-      // Add mouse leave event listener
-      element.addEventListener('mouseleave', handleMouseLeave);
+        // Add mouse leave event listener
+        const handleMouseLeave: (event: MouseEvent) => void = (event) => {
+          // Restore original styles
+          element.style.width = originalStyles.width;
+          element.style.zIndex = originalStyles.zIndex;
+          element.style.boxShadow = originalStyles.boxShadow;
+          element.style.maxWidth = originalStyles.maxWidth;
+          element.style.overflow = originalStyles.overflow;
+          element.style.height = originalStyles.height;
+
+          // Remove event listener
+          element.removeEventListener('mouseleave', handleMouseLeave);
+        };
+
+        // Add mouse leave event listener
+        element.addEventListener('mouseleave', handleMouseLeave);
+      }
     }
   }
 
@@ -185,7 +202,7 @@ function Cell<R, SR>({
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             padding: ' 0 .5rem',
-            width: 'inherit',
+            width: column.tooltip ? 'max-content' : 'inherit',
             height: '100%',
             display: 'flex',
             justifyContent: column.align ?? 'start',

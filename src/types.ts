@@ -48,6 +48,8 @@ export interface Column<TRow, TSummaryRow = unknown> {
   readonly colSpan?: Maybe<(args: ColSpanArgs<TRow, TSummaryRow>) => Maybe<number>>;
   /** Determines whether column is frozen or not */
   readonly frozen?: Maybe<boolean>;
+  readonly tooltip?: Maybe<boolean>;
+
   /** Enable resizing of a column */
   readonly resizable?: Maybe<boolean>;
   /** Enable sorting of a column */
@@ -83,7 +85,7 @@ export interface CalculatedColumn<TRow, TSummaryRow = unknown> extends Column<TR
   frozen: boolean;
   readonly type?: CellEditType;
   readonly options?: Array<String>;
-
+  readonly tooltip?: Maybe<boolean>;
   readonly align: Maybe<'start' | 'center' | 'end'>;
   readonly headerAlign: Maybe<'start' | 'center' | 'end'>;
   readonly renderCell: (props: RenderCellProps<TRow, TSummaryRow>) => ReactNode;
@@ -239,6 +241,9 @@ export interface CellSelectArgs<TRow, TSummaryRow = unknown> {
   rowIdx: number;
   row: TRow;
   column: CalculatedColumn<TRow, TSummaryRow>;
+}
+export interface PaginationType {
+  count?: number;
 }
 
 export interface BaseRenderRowProps<TRow, TSummaryRow = unknown>
