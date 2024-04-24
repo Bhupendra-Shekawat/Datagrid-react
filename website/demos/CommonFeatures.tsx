@@ -323,7 +323,6 @@ export default function CommonFeatures({ direction }: Props) {
 
   const sortedRows = useMemo((): readonly Row[] => {
     if (sortColumns.length === 0) return rows;
-    debugger;
     return [...rows].sort((a, b) => {
       for (const sort of sortColumns) {
         const comparator = getComparator(sort.columnKey);

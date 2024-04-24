@@ -44,6 +44,7 @@ export function useCalculatedColumns<R, SR>({
   scrollLeft,
   enableVirtualization
 }: CalculatedColumnsArgs<R, SR>) {
+  // debugger;
   const defaultWidth = defaultColumnOptions?.width ?? DEFAULT_COLUMN_WIDTH;
   const defaultMinWidth = defaultColumnOptions?.minWidth ?? DEFAULT_COLUMN_MIN_WIDTH;
   const defaultMaxWidth = defaultColumnOptions?.maxWidth ?? undefined;

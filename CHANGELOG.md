@@ -417,18 +417,23 @@
 ### React-Data-Grid-Addons
 
 - **Breaking:** Migrate to `react-context-menu 2.9.2` ([#1081](https://github.com/adazzle/react-data-grid/pull/1081))
+
 ## 0.0.4 (Feb 28, 2024)
-  1. Text alignment configuration in column list added
-  2. Cell Popover for overflowing content added
-  
+
+1. Text alignment configuration in column list added
+2. Cell Popover for overflowing content added
+
 ## 0.0.5 (Feb 28, 2024)
-  1. Props added as oncelleditcommit 
-  2. Cell Popover for overflowing content added
-  
-  
+
+1. Props added as oncelleditcommit
+2. Cell Popover for overflowing content added
+
 ## 0.0.7 (Feb 28, 2024)
+
 - **Feature** Infinite Scroll props added, handle infinte scroll methods added into datagrid
-- **Feature** OnCellEditCommit added and Props changes added 
+- **Feature** OnCellEditCommit added and Props changes added
 - **Feature** getRowId added
 
-  
+## 0.1.2 (April 22, 2024)
+
+- **Issue Fix** Column width not adjusting with change in columns as in adding removing columns

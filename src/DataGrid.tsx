@@ -401,6 +401,7 @@ function DataGrid<R, SR, K extends Key>(
   const [measuredColumnWidths, setMeasuredColumnWidths] = useState(
     (): ReadonlyMap<string, number> => new Map()
   );
+
   const [copiedCell, setCopiedCell] = useState<{ row: R; columnKey: string } | null>(null);
   const [isDragging, setDragging] = useState(false);
   const [draggedOverRowIdx, setOverRowIdx] = useState<number | undefined>(undefined);
@@ -517,7 +518,10 @@ function DataGrid<R, SR, K extends Key>(
     topSummaryRows,
     bottomSummaryRows
   });
-
+  let prevColCount = useRef(rawColumns.length);
+  let handleUpdatePrevColCount = (newCount: number) => {
+    prevColCount.current = newCount;
+  };
   const { gridTemplateColumns, handleColumnResize } = useColumnWidths(
     columns,
     viewportColumns,
@@ -528,7 +532,9 @@ function DataGrid<R, SR, K extends Key>(
     measuredColumnWidths,
     setResizedColumnWidths,
     setMeasuredColumnWidths,
-    onColumnResize
+    onColumnResize,
+    prevColCount,
+    handleUpdatePrevColCount
   );
 
   const minColIdx = isTreeGrid ? -1 : 0;
@@ -1180,7 +1186,7 @@ function DataGrid<R, SR, K extends Key>(
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      debugger;
+      // debugger;
       setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
