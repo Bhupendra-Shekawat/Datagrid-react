@@ -565,7 +565,7 @@ const rules = {
   '@typescript-eslint/no-duplicate-type-constituents': 1,
   '@typescript-eslint/no-dynamic-delete': 0,
   '@typescript-eslint/no-empty-interface': 1,
-  '@typescript-eslint/no-explicit-any': [1, { fixToUnknown: true }],
+  '@typescript-eslint/no-explicit-any': [1, { fixToUnknown: false }],
   '@typescript-eslint/no-extra-non-null-assertion': 1,
   '@typescript-eslint/no-extraneous-class': 1,
   '@typescript-eslint/no-floating-promises': 0,

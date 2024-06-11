@@ -1,12 +1,9 @@
 {
   "name": "@cworks/react-datagrid-beta",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "MIT",
   "description": "Feature-rich and customizable data grid React component",
-  "keywords": [
-    "react",
-    "data grid"
-  ],
+  "keywords": ["react", "data grid"],
   "type": "module",
   "exports": {
     "./lib/styles.css": "./lib/styles.css",
@@ -21,12 +18,8 @@
   "main": "./lib/bundle.cjs",
   "module": "./lib/bundle.js",
   "types": "./lib/index.d.ts",
-  "files": [
-    "lib"
-  ],
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "files": ["lib"],
+  "sideEffects": ["**/*.css"],
   "scripts": {
     "start": "vite serve --clearScreen false",
     "preview": "vite preview",
@@ -43,12 +36,10 @@
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write .",
     "typecheck": "tsc",
-    "prepublishOnly": "npm install && npm run build && npm run build:types",
+    "prepublishonly": "npm install && npm run build && npm run build:types",
     "postpublish": "git push --follow-tags origin HEAD"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.15.9",
-    "@mui/material": "^5.10.7",
     "clsx": "^2.0.0"
   },
   "devDependencies": {
@@ -104,19 +95,5 @@
     "typescript": "~5.3.2",
     "vite": "^5.0.11",
     "vitest": "^1.2.0"
-  },
-  "peerDependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@material-ui/lab": "^4.0.0-alpha.61",
-    "@microsoft/fetch-event-source": "^2.0.1",
-    "@mui/icons-material": "^5.15.9",
-    "@mui/lab": "^5.0.0-alpha.101",
-    "@mui/material": "^5.10.7",
-    "@mui/styles": "^5.11.2",
-    "@mui/system": "^5.13.2",
-    "@mui/x-date-pickers": "^5.0.1",
-    "react": "^18.0",
-    "react-dom": "^18.0"
   }
 }

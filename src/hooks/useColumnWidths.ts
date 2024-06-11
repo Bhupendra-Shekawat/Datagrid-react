@@ -19,10 +19,9 @@ export function useColumnWidths<R, SR>(
   prevColCount: React.RefObject<number>,
   handleUpdatePrevColCount: (count: number) => void
 ) {
-  // debugger;
   const prevGridWidthRef = useRef(gridWidth);
   const columnsCanFlex: boolean = columns.length === viewportColumns.length;
-  const isColCountChanged: boolean = prevColCount?.current !== columns.length;
+  const isColCountChanged: boolean = prevColCount.current !== columns.length;
   // Allow columns to flex again when...
   const ignorePreviouslyMeasuredColumns: boolean =
     // there is enough space for columns to flex and the grid was resized
@@ -41,7 +40,7 @@ export function useColumnWidths<R, SR>(
     }
   }
 
-  let gridTemplateColumns = newTemplateColumns.join(' ');
+  const gridTemplateColumns = newTemplateColumns.join(' ');
 
   useLayoutEffect(() => {
     prevGridWidthRef.current = gridWidth;
@@ -102,10 +101,10 @@ export function useColumnWidths<R, SR>(
 
     onColumnResize?.(column.idx, measuredWidth);
   }
+
   if (isColCountChanged) {
     handleUpdatePrevColCount(columns.length);
   }
-
   return {
     gridTemplateColumns,
     handleColumnResize

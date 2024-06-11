@@ -199,7 +199,19 @@ function getColumns(countries: readonly string[], direction: Direction): Column<
       key: 'budget',
       name: 'Budget',
       renderCell(props) {
-        return currencyFormatter.format(props.row.budget);
+        return (
+          <div>
+            <p> {currencyFormatter.format(props.row.budget)}</p>
+            {props.rowIdx === 2 && (
+              <>
+                {' '}
+                <p> {currencyFormatter.format(props.row.budget)}</p>
+                <p> {currencyFormatter.format(props.row.budget)}</p>
+                <p> {currencyFormatter.format(props.row.budget)}</p>
+              </>
+            )}
+          </div>
+        );
       }
     },
     {
@@ -334,12 +346,12 @@ export default function CommonFeatures({ direction }: Props) {
       return 0;
     });
   }, [rows, sortColumns]);
-  const handleSelectRow = (data: any) => {
+  const handleSelectRow = (data: unknown) => {
     setSelectedRows(data);
   };
   const gridElement = (
     <DataGrid
-      enableTableExport={true}
+      enableTableExport
       rowKeyGetter={rowKeyGetter}
       columns={columns}
       rows={sortedRows}

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import type { Key, KeyboardEvent, RefAttributes } from 'react';
 import { flushSync } from 'react-dom';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IconButton } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+// import MoreVertIcon from '@mui/icons-material/MoreVert';
+// import { IconButton } from '@mui/material';
+// import Menu from '@mui/material/Menu';
+// import MenuItem from '@mui/material/MenuItem';
 // import { R } from 'vitest/dist/reporters-MmQN-57K.js';
 import { css } from '@linaria/core';
 import clsx from 'clsx';
@@ -35,7 +35,7 @@ import {
   scrollIntoView,
   sign
 } from './utils';
-import { exportToCsv, exportToPdf } from './utils/exportUtils';
+// import { exportToCsv, exportToPdf } from './utils/exportUtils';
 import type {
   CalculatedColumn,
   CellClickArgs,
@@ -490,6 +490,7 @@ function DataGrid<R, SR, K extends Key>(
     );
   }, [rows, selectedRows, rowKeyGetter]);
 
+  //Get the viewport rows
   const {
     rowOverscanStartIdx,
     rowOverscanEndIdx,
@@ -518,8 +519,8 @@ function DataGrid<R, SR, K extends Key>(
     topSummaryRows,
     bottomSummaryRows
   });
-  let prevColCount = useRef(rawColumns.length);
-  let handleUpdatePrevColCount = (newCount: number) => {
+  const prevColCount = useRef(rawColumns.length);
+  const handleUpdatePrevColCount = (newCount: number) => {
     prevColCount.current = newCount;
   };
   const { gridTemplateColumns, handleColumnResize } = useColumnWidths(
@@ -604,6 +605,37 @@ function DataGrid<R, SR, K extends Key>(
     },
     selectCell
   }));
+  // const testFunc = () => {
+  //   const prevGridWidthRef = prevColCount;
+  //   const columnsCanFlex: boolean = columns.length === viewportColumns.length;
+  //   const isColCountChanged: boolean = prevColCount.current !== columns.length;
+  //   // Allow columns to flex again when...
+  //   const ignorePreviouslyMeasuredColumns: boolean =
+  //     // there is enough space for columns to flex and the grid was resized
+  //     columnsCanFlex && gridWidth !== prevGridWidthRef.current;
+  //   const newTemplateColumns = [...templateColumns];
+  //   const columnsToMeasure: string[] = [];
+
+  //   for (const { key, idx, width } of viewportColumns) {
+  //     if (
+  //       typeof width === 'string' &&
+  //       (ignorePreviouslyMeasuredColumns || !measuredColumnWidths.has(key) || isColCountChanged) &&
+  //       !resizedColumnWidths.has(key)
+  //     ) {
+  //       newTemplateColumns[idx] = width;
+  //       columnsToMeasure.push(key);
+  //     }
+  //   }
+
+  //   // gridTemplateColumns = newTemplateColumns.join(' ');
+  // };
+
+  React.useEffect(() => {
+    // window.addEventListener('resize', testFunc);
+    // return () => {
+    //   window.removeEventListener('resize', testFunc);
+    // };
+  }, []);
 
   /**
    * callbacks
@@ -675,7 +707,8 @@ function DataGrid<R, SR, K extends Key>(
         },
         cellEvent
       );
-      if (event.key == 'Enter') {
+      if (event.key === 'Enter') {
+        /* empty */
       }
       if (cellEvent.isGridDefaultPrevented()) return;
     }
@@ -750,14 +783,17 @@ function DataGrid<R, SR, K extends Key>(
       onScroll?.(event);
     }
   }
+
   function handleOnMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
     // let targetElement: HTMLDivElement = event.currentTarget;
     // targetElement.style.overflow = 'scroll';
   }
+
   function handleOnMouseExit(event: React.MouseEvent<HTMLDivElement>) {
     // let targetElement: HTMLDivElement = event.currentTarget;
     // targetElement.style.overflow = 'hidden';
   }
+
   function updateRow(column: CalculatedColumn<R, SR>, rowIdx: number, row: R) {
     if (typeof onRowsChange !== 'function') return;
     if (row === rows[rowIdx]) return;
@@ -1170,73 +1206,74 @@ function DataGrid<R, SR, K extends Key>(
         })
       );
     }
+    // console.log(rowElements);
 
     return rowElements;
   }
 
-  function BasicMenu({
-    gridElement,
-    rows,
-    columns
-  }: {
-    gridElement: any;
-    rows: readonly R[];
-    columns: readonly ColumnOrColumnGroup<R, SR>[];
-  }) {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      // debugger;
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
-    const [exporting, setExporting] = useState(0);
+  // function BasicMenu({
+  //   gridElement,
+  //   rows,
+  //   columns
+  // }: {
+  //   gridElement: any;
+  //   rows: readonly R[];
+  //   columns: readonly ColumnOrColumnGroup<R, SR>[];
+  // }) {
+  //   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  //   const open = Boolean(anchorEl);
+  //   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //     // debugger;
+  //     setAnchorEl(event.currentTarget);
+  //   };
+  //   const handleClose = () => {
+  //     setAnchorEl(null);
+  //   };
+  //   const [exporting, setExporting] = useState(0);
 
-    return (
-      <div>
-        <IconButton
-          id="basic-button"
-          aria-controls={open ? 'basic-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          onClick={handleClick}
-        >
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button'
-          }}
-        >
-          <MenuItem
-            onClick={async () => {
-              setExporting(1);
-              await exportToCsv(gridElement, 'CommonFeatures.csv', rows, columns);
-              setExporting(0);
-            }}
-          >
-            {exporting == 1 ? 'Exporting...' : 'Export as CSV'}
-          </MenuItem>
-          <MenuItem
-            onClick={async () => {
-              setExporting(2);
-              await exportToPdf(gridElement, 'CommonFeatures.pdf', rows, columns);
-              setExporting(0);
-            }}
-          >
-            {exporting == 2 ? 'Exporting...' : 'Export as PDF'}
-          </MenuItem>
-          <MenuItem onClick={handleClose}>Export as Excel</MenuItem>
-        </Menu>
-      </div>
-    );
-  }
+  //   return (
+  //     <div>
+  //       <IconButton
+  //         id="basic-button"
+  //         aria-controls={open ? 'basic-menu' : undefined}
+  //         aria-haspopup="true"
+  //         aria-expanded={open ? 'true' : undefined}
+  //         onClick={handleClick}
+  //       >
+  //         <MoreVertIcon />
+  //       </IconButton>
+  //       <Menu
+  //         id="basic-menu"
+  //         anchorEl={anchorEl}
+  //         open={open}
+  //         onClose={handleClose}
+  //         MenuListProps={{
+  //           'aria-labelledby': 'basic-button'
+  //         }}
+  //       >
+  //         <MenuItem
+  //           onClick={async () => {
+  //             setExporting(1);
+  //             await exportToCsv(gridElement, 'CommonFeatures.csv', rows, columns);
+  //             setExporting(0);
+  //           }}
+  //         >
+  //           {exporting == 1 ? 'Exporting...' : 'Export as CSV'}
+  //         </MenuItem>
+  //         <MenuItem
+  //           onClick={async () => {
+  //             setExporting(2);
+  //             await exportToPdf(gridElement, 'CommonFeatures.pdf', rows, columns);
+  //             setExporting(0);
+  //           }}
+  //         >
+  //           {exporting == 2 ? 'Exporting...' : 'Export as PDF'}
+  //         </MenuItem>
+  //         <MenuItem onClick={handleClose}>Export as Excel</MenuItem>
+  //       </Menu>
+  //     </div>
+  //   );
+  // }
 
   // Reset the positions if the current values are no longer valid. This can happen if a column or row is removed
   if (selectedPosition.idx > maxColIdx || selectedPosition.rowIdx > maxRowIdx) {
@@ -1439,7 +1476,7 @@ function DataGrid<R, SR, K extends Key>(
       <>
         {enableTableExport && (
           <div className={toolbarClassname}>
-            <BasicMenu gridElement={gridElement} columns={columns} rows={rows} />
+            {/* <BasicMenu gridElement={gridElement} columns={columns} rows={rows} /> */}
           </div>
         )}
         {gridElement}

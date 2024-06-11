@@ -43,7 +43,8 @@ export interface Row {
 function rowKeyGetter(row: Row) {
   return row.id;
 }
-let handleOnClick = () => {};
+
+const handleOnClick = () => {};
 // function testingfunc() {
 //   return <p onClick={handleOnClick}> testing </p>;
 // }

@@ -93,6 +93,7 @@ function Cell<R, SR>({
   function handleRowChange(newRow: R) {
     onRowChange(column, newRow);
   }
+
   function handleMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
     if (!column.editable && column.tooltip) {
       const element = event.currentTarget;
@@ -190,7 +191,7 @@ function Cell<R, SR>({
             isCellEditable: isEditable,
             tabIndex: childTabIndex,
             onRowChange: handleRowChange,
-            isRowSelectable: isRowSelectable
+            isRowSelectable
           })}
         </div>
       )}
@@ -199,11 +200,11 @@ function Cell<R, SR>({
           className="rdg-cell-container"
           style={{
             whiteSpace: 'nowrap',
-            overflow: 'hidden',
+            // overflow: 'hidden',
             textOverflow: 'ellipsis',
             padding: ' 0 .5rem',
             width: column.tooltip ? 'max-content' : 'inherit',
-            height: '100%',
+            height: 'max-content',
             display: 'flex',
             justifyContent: column.align ?? 'start',
             alignItems: 'center',
