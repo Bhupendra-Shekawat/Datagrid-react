@@ -3,7 +3,10 @@
   "version": "0.1.3",
   "license": "MIT",
   "description": "Feature-rich and customizable data grid React component",
-  "keywords": ["react", "data grid"],
+  "keywords": [
+    "react",
+    "data grid"
+  ],
   "type": "module",
   "exports": {
     "./lib/styles.css": "./lib/styles.css",
@@ -18,8 +21,12 @@
   "main": "./lib/bundle.cjs",
   "module": "./lib/bundle.js",
   "types": "./lib/index.d.ts",
-  "files": ["lib"],
-  "sideEffects": ["**/*.css"],
+  "files": [
+    "lib"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "start": "vite serve --clearScreen false",
     "preview": "vite preview",
@@ -40,6 +47,9 @@
     "postpublish": "git push --follow-tags origin HEAD"
   },
   "dependencies": {
+    "@emotion/react": "^11.12.0",
+    "@emotion/styled": "^11.12.0",
+    "@mui/material": "^5.16.4",
     "clsx": "^2.0.0"
   },
   "devDependencies": {

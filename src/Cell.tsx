@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
+import { Tooltip } from '@mui/material';
 import { css } from '@linaria/core';
 
 import { useRovingTabIndex } from './hooks';
@@ -94,136 +95,130 @@ function Cell<R, SR>({
     onRowChange(column, newRow);
   }
 
-  function handleMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
-    if (!column.editable && column.tooltip) {
-      const element = event.currentTarget;
-      const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
-      const textElementWidth =
-        parseInt(getComputedStyle(element.children[0]).width.replace('px', ''), 10) ||
-        containerWidth;
-      if (textElementWidth > containerWidth) {
-        // Store original styles
-        const originalStyles = {
-          width: element.style.width,
-          zIndex: element.style.zIndex,
-          boxShadow: element.style.boxShadow,
-          maxWidth: element.style.maxWidth,
-          overflow: element.style.overflow,
-          height: element.style.height
-        };
+  function getTextWidth(text: string, font: string): number {
+    const canvas: HTMLCanvasElement = document.createElement('canvas');
+    const context = canvas.getContext('2d');
 
-        // Set new styles
-        // debugger;
-        element.style.width = 'max-content';
-        // element.style.backgroundColor = 'red';
-
-        // element.style.height = '3rem';
-
-        element.style.maxWidth = '400px';
-
-        element.style.zIndex = '100';
-        element.style.boxShadow = '0px 0px 8px 1px rgba(0,0,0,0.38)';
-        element.style.overflow = 'auto';
-        // element.style.backgroundColor = 'red';
-
-        // Add mouse leave event listener
-        const handleMouseLeave: (event: MouseEvent) => void = (event) => {
-          // Restore original styles
-          element.style.width = originalStyles.width;
-          element.style.zIndex = originalStyles.zIndex;
-          element.style.boxShadow = originalStyles.boxShadow;
-          element.style.maxWidth = originalStyles.maxWidth;
-          element.style.overflow = originalStyles.overflow;
-          element.style.height = originalStyles.height;
-
-          // Remove event listener
-          element.removeEventListener('mouseleave', handleMouseLeave);
-        };
-
-        // Add mouse leave event listener
-        element.addEventListener('mouseleave', handleMouseLeave);
-      }
+    if (context) {
+      context.font = font;
+      // Measure the width of the text
+      const metrics = context.measureText(text);
+      return metrics.width;
     }
+    return 0;
+  }
+
+  const [title, setitle] = useState<null | string>(null);
+
+  function handleMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
+    // if (!column.editable && column.tooltip) {
+    const element = event.currentTarget;
+    const computedStyle = getComputedStyle(element);
+
+    const containerWidth = parseInt(getComputedStyle(element).width.replace('px', ''), 10);
+    const font: string = computedStyle.fontFamily ? computedStyle.fontFamily : 'sans-serif';
+    const fontSize: string = computedStyle.fontSize ? computedStyle.fontSize : '14';
+
+    const textWidth = getTextWidth(event.currentTarget.innerText, `${fontSize} ${font}`);
+    if (textWidth >= containerWidth) {
+      setitle(event.currentTarget.innerText);
+    }
+    //   // Store original styles
+    //   const originalStyles = {
+    //     width: element.style.width,
+    //     zIndex: element.style.zIndex,
+    //     boxShadow: element.style.boxShadow,
+    //     maxWidth: element.style.maxWidth,
+    //     overflow: element.style.overflow,
+    //     height: element.style.height
+    //   };
+    //   // Set new styles
+    //   // debugger;
+    //   element.style.width = 'max-content';
+    //   // element.style.backgroundColor = 'red';
+    //   // element.style.height = '3rem';
+    //   element.style.maxWidth = '400px';
+    //   element.style.zIndex = '100';
+    //   element.style.boxShadow = '0px 0px 8px 1px rgba(0,0,0,0.38)';
+    //   element.style.overflow = 'auto';
+    //   // element.style.backgroundColor = 'red';
+    //   // Add mouse leave event listener
+    const handleMouseLeave: (event: MouseEvent) => void = (event) => {
+      setitle(null);
+      element.removeEventListener('mouseleave', handleMouseLeave);
+    };
+    //   // Add mouse leave event listener
+    element.addEventListener('mouseleave', handleMouseLeave);
+    // }
+    // getTextWidth()
+    // }
   }
 
   return (
-    <div
-      role="gridcell"
-      aria-colindex={column.idx + 1} // aria-colindex is 1-based
-      aria-colspan={colSpan}
-      aria-selected={isCellSelected}
-      aria-readonly={!isEditable || undefined}
-      tabIndex={tabIndex}
-      className={className}
-      style={{
-        ...getCellStyle(column, colSpan),
-        ...getEditCellStyle(column, colSpan)
-      }}
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-      onContextMenu={handleContextMenu}
-      onFocus={onFocus}
-      onMouseEnter={handleMouseEnter}
-      {...props}
-    >
-      {column.editable && (
-        <div
-          className="rdg-cell-container"
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            padding: ' 0 .5rem',
-            width: '90%',
-            height: '60%',
+    <Tooltip sx={{ fontSize: '16px' }} title={title} open={!!title}>
+      <div
+        role="gridcell"
+        aria-colindex={column.idx + 1} // aria-colindex is 1-based
+        aria-colspan={colSpan}
+        aria-selected={isCellSelected}
+        aria-readonly={!isEditable || undefined}
+        tabIndex={tabIndex}
+        className={className}
+        style={{
+          ...getCellStyle(column, colSpan),
+          ...getEditCellStyle(column, colSpan)
+        }}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+        onContextMenu={handleContextMenu}
+        onFocus={onFocus}
+        onMouseEnter={handleMouseEnter}
+        {...props}
+      >
+        {column.editable && (
+          <div
+            className="rdg-cell-container"
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              padding: ' 0 .5rem',
+              width: '90%',
+              height: '60%',
 
-            display: 'flex',
-            justifyContent: column.align ?? 'start',
-            alignItems: 'center',
-            border: 'solid 1.5px grey',
-            borderRadius: '2px'
-          }}
-        >
-          {column.renderCell({
-            column,
-            row,
-            rowIdx,
-            isCellEditable: isEditable,
-            tabIndex: childTabIndex,
-            onRowChange: handleRowChange,
-            isRowSelectable
-          })}
-        </div>
-      )}
-      {!column.editable && (
-        <div
-          className="rdg-cell-container"
-          style={{
-            whiteSpace: 'nowrap',
-            // overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            padding: ' 0 .5rem',
-            width: column.tooltip ? 'max-content' : 'inherit',
-            height: 'max-content',
-            display: 'flex',
-            justifyContent: column.align ?? 'start',
-            alignItems: 'center',
-            border: column.editable ? 'solid 1.5px grey' : '',
-            borderRadius: column.editable ? '4px' : ''
-          }}
-        >
-          {column.renderCell({
-            column,
-            row,
-            rowIdx,
-            isCellEditable: isEditable,
-            tabIndex: childTabIndex,
-            onRowChange: handleRowChange,
-            isRowSelectable
-          })}
-        </div>
-      )}
-    </div>
+              display: 'flex',
+              justifyContent: column.align ?? 'start',
+              alignItems: 'center',
+              border: 'solid 1.5px grey',
+              borderRadius: '2px'
+            }}
+          >
+            {column.renderCell({
+              column,
+              row,
+              rowIdx,
+              isCellEditable: isEditable,
+              tabIndex: childTabIndex,
+              onRowChange: handleRowChange,
+              isRowSelectable
+            })}
+          </div>
+        )}
+        {!column.editable && (
+          <>
+            {column.renderCell({
+              column,
+              row,
+              rowIdx,
+              isCellEditable: isEditable,
+              tabIndex: childTabIndex,
+              onRowChange: handleRowChange,
+              isRowSelectable
+            })}
+          </>
+        )}
+      </div>
+    </Tooltip>
   );
 }
 
